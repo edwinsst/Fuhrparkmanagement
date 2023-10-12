@@ -1,4 +1,4 @@
-package com.example.fuhrparkmanagementspring;
+package de.swtm.fuhrparkmanagement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
