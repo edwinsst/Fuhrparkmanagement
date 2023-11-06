@@ -16,6 +16,7 @@ public class Car {
     private Long id;
 
     // TODO: Regex for validation
+
     private String licensePlate;
 
     // TODO: Size validation

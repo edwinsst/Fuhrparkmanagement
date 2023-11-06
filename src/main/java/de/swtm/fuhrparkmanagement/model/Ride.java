@@ -14,6 +14,7 @@ public class Ride {
     private Long id;
 
     @ManyToOne
+    // @JoinColumn(nullable = false)
     private Car car;
 
     private String startAddress;
