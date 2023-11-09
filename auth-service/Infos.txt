@@ -1,0 +1,14 @@
+ Vorhande usernamen:
+
+ - mbeck
+ - mschenider
+ - pmaier
+ - aNachnamen
+ - jmoser
+ - shensle
+
+ Passwort ist immer "{usernamen}-pw"
+
+
+ SwaggerUi:
+ - http://localhost:8082/swagger-ui/index.html
