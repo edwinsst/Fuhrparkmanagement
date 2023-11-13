@@ -9,6 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { CalendarBigComponent } from './calendar-big/calendar-big.component';
+import { ToolBarComponent } from './tool-bar/tool-bar.component';
 
 
 
@@ -22,6 +23,7 @@ import { CalendarBigComponent } from './calendar-big/calendar-big.component';
     AppRoutingModule,
     MaterialModule,
     CalendarComponent,
+    ToolBarComponent,
     BrowserAnimationsModule,
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
   ],
