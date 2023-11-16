@@ -1,6 +1,10 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { FlatpickrModule } from 'angularx-flatpickr';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CalendarComponent } from "./calendar/calendar.component";
@@ -19,6 +23,10 @@ import { ToolBarComponent } from './tool-bar/tool-bar.component';
     CalendarBigComponent,
   ],
   imports: [
+    CommonModule,
+    FormsModule,
+    NgbModalModule,
+    FlatpickrModule.forRoot(),
     BrowserModule,
     AppRoutingModule,
     MaterialModule,
@@ -28,6 +36,7 @@ import { ToolBarComponent } from './tool-bar/tool-bar.component';
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: [CalendarBigComponent],
 })
 export class AppModule { }
