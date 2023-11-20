@@ -1,7 +1,25 @@
 <mat-toolbar class="toolbar">
-  <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+  <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with menu icon">
     <mat-icon>menu</mat-icon>
   </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item>
+      <mat-icon>add_circle</mat-icon>
+      <span>New Booking</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon>edit</mat-icon>
+      <span>Edit Booking</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon>delete</mat-icon>
+      <span>Delete Booking</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon>poll</mat-icon>
+      <span>Statistics</span>
+    </button>
+  </mat-menu>
   <span>Poolfahrzeug-Buchung</span>
   <span class="example-spacer"></span>
   <img src="../assets/images/doubleslash_Logo.png" width="180" height="54">
