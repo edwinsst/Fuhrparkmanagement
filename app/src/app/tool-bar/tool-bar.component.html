@@ -3,22 +3,32 @@
     <mat-icon>menu</mat-icon>
   </button>
   <mat-menu #menu="matMenu">
-    <button mat-menu-item>
-      <mat-icon>add_circle</mat-icon>
-      <span>New Booking</span>
-    </button>
-    <button mat-menu-item>
-      <mat-icon>edit</mat-icon>
-      <span>Edit Booking</span>
-    </button>
-    <button mat-menu-item>
+
+    <a href="http://localhost:4200" mat-menu-item >
+      <mat-icon>home</mat-icon>Home
+    </a>
+
+    <a href="http://localhost:4200/new" mat-menu-item >
+      <mat-icon>add_circle</mat-icon>New Booking
+    </a>
+    <a href="http://localhost:4200/edit" mat-menu-item >
+      <mat-icon>edit</mat-icon>Edit Booking
+    </a>
+
+    <button mat-menu-item [matMenuTriggerFor]="deleteItem">
       <mat-icon>delete</mat-icon>
-      <span>Delete Booking</span>
+      <span>Delete Booking </span>
     </button>
-    <button mat-menu-item>
-      <mat-icon>poll</mat-icon>
-      <span>Statistics</span>
-    </button>
+    <mat-menu #deleteItem=matMenu>
+      <button mat-menu-item>Booking 1</button>
+      <button mat-menu-item>Booking 2</button>
+      <button mat-menu-item>Booking 3</button>
+      <button mat-menu-item>Booking 4</button>
+      <button mat-menu-item>Booking 5</button>
+    </mat-menu>
+    <a href="http://localhost:4200/statistics" mat-menu-item >
+      <mat-icon>poll</mat-icon>Statistics
+    </a>
   </mat-menu>
   <span>Poolfahrzeug-Buchung</span>
   <span class="example-spacer"></span>
