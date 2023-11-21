@@ -1,0 +1,25 @@
+*{
+  padding: 0;
+  margin: 0;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.body {
+  /*display: flex;*/
+  padding: 5em;
+  /*justify-content: center;*/
+  /*align-items: center;*/
+  height: 100%;
+}
+
+mat-form-field {
+  margin: 5px;
+  padding: 2px;
+}
+
+button {
+  margin-right: 8px;
+}

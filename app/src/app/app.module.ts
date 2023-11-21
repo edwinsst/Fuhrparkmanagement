@@ -17,6 +17,8 @@ import { CalendarBigComponent } from './calendar-big/calendar-big.component';
 import { MaterialModule } from "./material/material.module";
 import { EditComponent } from './edit/edit.component';
 import { StatisticsComponent } from './statistics/statistics.component';
+import {LoginComponent} from "./login/login.component";
+import {HttpClientModule} from "@angular/common/http";
 
 
 @NgModule({
@@ -34,6 +36,8 @@ import { StatisticsComponent } from './statistics/statistics.component';
     AddBookingComponent,
     EditComponent,
     StatisticsComponent,
+    LoginComponent,
+    HttpClientModule,
     AppRoutingModule,
     CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
     RouterOutlet
