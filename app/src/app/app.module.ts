@@ -21,7 +21,7 @@ import { StatisticsComponent } from './statistics/statistics.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     MaterialModule,
