@@ -1,8 +1,9 @@
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddBookingComponent } from './add-booking.component';
 
-describe('AddBookingComponent', () => {
+describe('DemoComponent', () => {
   let component: AddBookingComponent;
   let fixture: ComponentFixture<AddBookingComponent>;
 
@@ -19,3 +20,6 @@ describe('AddBookingComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+
+
+
