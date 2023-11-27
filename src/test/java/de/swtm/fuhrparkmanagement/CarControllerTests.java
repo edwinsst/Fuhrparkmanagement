@@ -5,22 +5,28 @@ import de.swtm.fuhrparkmanagement.controller.CarController;
 import de.swtm.fuhrparkmanagement.model.Car;
 import de.swtm.fuhrparkmanagement.model.FuelType;
 import de.swtm.fuhrparkmanagement.repository.CarRepository;
+import de.swtm.fuhrparkmanagement.security.SecurityConfig;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
-import static org.mockito.Mockito.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CarController.class)
+@WithMockUser
+@ImportAutoConfiguration(SecurityConfig.class)
 public class CarControllerTests {
 
     @Autowired
