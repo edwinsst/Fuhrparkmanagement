@@ -7,3 +7,10 @@ services:
       - 'POSTGRES_USER=admin'
     ports:
       - '5432:5432'
+  auth-service:
+    image: 'eclipse-temurin:17-jdk'
+    volumes:
+      - './auth-service/auth-service.jar:/auth-service.jar'
+    ports:
+      - '8082:8082'
+    command: ['java', '-jar', '/auth-service.jar']
