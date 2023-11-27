@@ -3,3 +3,6 @@ spring:
     hibernate:
       ddl-auto: update
     generate-ddl: true
+
+authentication:
+  jwt-secret: 'hAdsJsFnV5TxvkuWKrD33sWWvEjGcYufQ9PB246Tmnu6NnFfTXhAdsJsFnV5TxvkuWKrD33sWWvEjGcYufQ9PB246Tmnu6NnFfTXhAdsJsFnV5TxvkuWKrD33sWWvEjGcYufQ9PB246Tm123123123'
