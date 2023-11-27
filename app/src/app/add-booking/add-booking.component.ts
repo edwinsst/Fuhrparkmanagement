@@ -13,7 +13,7 @@ import {HttpClient} from "@angular/common/http";
 import {ToolBarComponent} from "../tool-bar/tool-bar.component";
 
 @Component({
-  selector: 'app-demo',
+  selector: 'app-add-booking',
   templateUrl: './add-booking.component.html',
   styleUrls: ['./add-booking.component.css'],
   imports: [

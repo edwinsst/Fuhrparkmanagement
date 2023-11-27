@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CalendarComponent } from './calendar.component';
+import {CommonModule} from "@angular/common";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('CalendarComponent', () => {
   let component: CalendarComponent;
@@ -8,7 +10,7 @@ describe('CalendarComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [CalendarComponent]
+      imports: [CalendarComponent, CommonModule, BrowserAnimationsModule]
     });
     fixture = TestBed.createComponent(CalendarComponent);
     component = fixture.componentInstance;

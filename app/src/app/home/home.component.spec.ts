@@ -1,6 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HomeComponent } from './home.component';
+import {
+  CalendarModule,
+  DateAdapter
+} from "angular-calendar";
+import {adapterFactory} from "angular-calendar/date-adapters/date-fns";
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -8,7 +13,7 @@ describe('HomeComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [HomeComponent]
+      imports: [HomeComponent, CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory})]
     });
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
