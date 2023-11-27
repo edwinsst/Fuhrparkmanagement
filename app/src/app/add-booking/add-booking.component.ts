@@ -10,6 +10,7 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 import {NgIf} from "@angular/common";
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {HttpClient} from "@angular/common/http";
+import {ToolBarComponent} from "../tool-bar/tool-bar.component";
 
 @Component({
   selector: 'app-demo',
@@ -25,7 +26,8 @@ import {HttpClient} from "@angular/common/http";
     MatSelectModule,
     ReactiveFormsModule,
     NgIf,
-    MatDialogModule
+    MatDialogModule,
+    ToolBarComponent
   ],
   standalone: true
 })
