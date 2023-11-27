@@ -1,0 +1,98 @@
+<app-tool-bar></app-tool-bar>
+<div class="body">
+  <mat-card>
+    <mat-card-content>
+      <form [formGroup]="carCreateForm">
+        <mat-form-field>
+          <mat-label>Nummernschild</mat-label>
+          <input matInput formControlName="licensePlate" placeholder="Bsp. S-DS-0815">
+          <mat-error *ngIf="carCreateForm.controls.licensePlate.hasError('required')">Sie müssen etwas eingeben</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Modell-Name</mat-label>
+          <input matInput formControlName="modelName" placeholder="Bsp. BMW 320i">
+          <mat-error *ngIf="carCreateForm.controls.modelName.hasError('required')">Sie müssen etwas eingeben</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Treibstoff</mat-label>
+          <mat-select formControlName="fuelType">
+            <mat-option value="0">Benzin</mat-option>
+            <mat-option value="1">Diesel</mat-option>
+            <mat-option value="2">Elektrisch</mat-option>
+          </mat-select>
+          <mat-error *ngIf="carCreateForm.controls.fuelType.hasError('required')">Sie müssen etwas eingeben</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Standort</mat-label>
+          <mat-select formControlName="location">
+            <mat-option value="friedrichshafen">Friedrichshafen</mat-option>
+            <mat-option value="karlsruhe">Karlsruhe</mat-option>
+            <mat-option value="münchen">München</mat-option>
+            <mat-option value="stuttgart">Stuttgart</mat-option>
+          </mat-select>
+          <mat-error *ngIf="carCreateForm.controls.location.hasError('required')">Sie müssen etwas eingeben</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Anzahl Sitze</mat-label>
+          <input matInput formControlName="seats" type="number" placeholder="Bsp. 5">
+          <mat-error *ngIf="carCreateForm.controls.seats.hasError('required')">Sie müssen etwas eingeben</mat-error>
+          <mat-error *ngIf="carCreateForm.controls.seats.hasError('min')">Es muss mindestens einen Sitz geben</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Reichweite (in KM)</mat-label>
+          <input matInput formControlName="range" type="number" placeholder="Bsp. 500">
+          <mat-error *ngIf="carCreateForm.controls.range.hasError('required')">Sie müssen etwas eingeben</mat-error>
+          <mat-error *ngIf="carCreateForm.controls.range.hasError('min')">Die Reichweite muss mind. 1km betragen</mat-error>
+        </mat-form-field>
+        <button mat-raised-button color="primary" [disabled]="!carCreateForm.valid" (click)="openDialog()">Auto anlegen</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+  <table mat-table [dataSource]="loadedCars" class="mat-elevation-z8">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> Id </th>
+      <td mat-cell *matCellDef="let car"> {{car.id}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="licensePlate">
+      <th mat-header-cell *matHeaderCellDef> Nummernschild </th>
+      <td mat-cell *matCellDef="let car"> {{car.licensePlate}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="modelName">
+      <th mat-header-cell *matHeaderCellDef> Modell-Name </th>
+      <td mat-cell *matCellDef="let car"> {{car.modelName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="fuelType">
+      <th mat-header-cell *matHeaderCellDef> Treibstoff </th>
+      <td mat-cell *matCellDef="let car"> {{car.fuelType}} </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="location">
+      <th mat-header-cell *matHeaderCellDef> Standort </th>
+      <td mat-cell *matCellDef="let car"> {{car.location}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="seats">
+      <th mat-header-cell *matHeaderCellDef> Sitze </th>
+      <td mat-cell *matCellDef="let car"> {{car.seats}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="range">
+      <th mat-header-cell *matHeaderCellDef> Reichweite </th>
+      <td mat-cell *matCellDef="let car"> {{car.range}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="available">
+      <th mat-header-cell *matHeaderCellDef> Verfügbar </th>
+      <td mat-cell *matCellDef="let car"> {{car.available}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+</div>
+

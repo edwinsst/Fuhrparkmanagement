@@ -1,0 +1,32 @@
+<app-tool-bar></app-tool-bar>
+
+<div class="content" role="main">
+<mat-card>
+  <mat-card-content>
+    <form [formGroup]="loginForm">
+      <mat-error *ngIf="wrongCredentials">
+        Der Benutzername oder das Passwort stimmen nicht!
+      </mat-error>
+      <mat-form-field>
+        <mat-label>Benutzername</mat-label>
+        <input matInput formControlName="username" placeholder="maxmustermann">
+        <mat-error *ngIf="loginForm.controls.username.hasError('required')">Sie müssen etwas eingeben</mat-error>
+      </mat-form-field>
+      <br>
+      <mat-form-field>
+        <mat-label>Passwort</mat-label>
+        <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'">
+        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        <mat-error *ngIf="loginForm.controls.password.hasError('required')">Sie müssen etwas eingeben</mat-error>
+      </mat-form-field>
+      <br>
+      <button mat-raised-button color="primary" [disabled]="!loginForm.valid" (click)="login()">Login</button>
+      <br>
+
+
+    </form>
+  </mat-card-content>
+</mat-card>
+</div>
