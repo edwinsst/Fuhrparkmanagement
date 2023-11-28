@@ -20,15 +20,17 @@ import { StatisticsComponent } from './statistics/statistics.component';
 
 
 @NgModule({
+  bootstrap: [AppComponent],
   declarations: [
     AppComponent,
   ],
+  exports: [],
   imports: [
     MaterialModule,
     CalendarComponent,
+    CalendarBigComponent,
     ToolBarComponent,
     HomeComponent,
-    CalendarBigComponent,
     BrowserAnimationsModule,
     EventsComponent,
     AddBookingComponent,
@@ -39,7 +41,5 @@ import { StatisticsComponent } from './statistics/statistics.component';
     RouterOutlet
   ],
   providers: [],
-  bootstrap: [AppComponent],
-  exports: [],
 })
 export class AppModule { }
