@@ -1,0 +1,36 @@
+<mat-toolbar class="toolbar">
+  <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with menu icon">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+
+    <a href="http://localhost:4200/home" mat-menu-item >
+      <mat-icon>home</mat-icon>Home
+    </a>
+
+    <a href="http://localhost:4200/new" mat-menu-item >
+      <mat-icon>add_circle</mat-icon>New Booking
+    </a>
+    <a href="http://localhost:4200/edit" mat-menu-item >
+      <mat-icon>edit</mat-icon>Edit Booking
+    </a>
+
+    <button mat-menu-item [matMenuTriggerFor]="deleteItem">
+      <mat-icon>delete</mat-icon>
+      <span>Delete Booking </span>
+    </button>
+    <mat-menu #deleteItem=matMenu>
+      <button mat-menu-item>Booking 1</button>
+      <button mat-menu-item>Booking 2</button>
+      <button mat-menu-item>Booking 3</button>
+      <button mat-menu-item>Booking 4</button>
+      <button mat-menu-item>Booking 5</button>
+    </mat-menu>
+    <a href="http://localhost:4200/statistics" mat-menu-item >
+      <mat-icon>poll</mat-icon>Statistics
+    </a>
+  </mat-menu>
+  <span>Poolfahrzeug-Buchung</span>
+  <span class="example-spacer"></span>
+  <img src="../assets/images/doubleslash_Logo.png" width="180" height="54">
+</mat-toolbar>
