@@ -18,6 +18,7 @@ import java.util.Optional;
 public class RideController {
 
     private final RideRepository rideRepository;
+    private final CarRepository carRepository;
 
     @PostMapping
     public ResponseEntity<Ride> create(@RequestBody @Valid @JsonView(Ride.Views.WithoutId.class) Ride ride) {

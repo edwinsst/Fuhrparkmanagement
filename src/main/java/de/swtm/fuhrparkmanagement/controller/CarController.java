@@ -1,10 +1,15 @@
 package de.swtm.fuhrparkmanagement.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import de.swtm.fuhrparkmanagement.model.Car;
 import de.swtm.fuhrparkmanagement.repository.CarRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/cars")
