@@ -13,13 +13,38 @@ public class CarController {
 
     private final CarRepository carRepository;
 
-    @PostMapping("/create")
-    public Car create(@RequestBody @Valid Car car) {
+    @PostMapping
+    public Car create(@RequestBody @Valid @JsonView(Car.Views.WithoutId.class) Car car) {
         return carRepository.save(car);
     }
 
-    @GetMapping("/list")
+    @GetMapping
     public Iterable<Car> listAll() {
         return carRepository.findAll();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") long id) {
+        Optional<Car> car = carRepository.findById(id);
+        if (car.isPresent()){
+            carRepository.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Car> update(@PathVariable("id") long id,
+                                      @RequestBody @Valid @JsonView(Car.Views.WithoutId.class) Car car)
+    {
+        return ResponseEntity.of(carRepository.findById(id).map(existingCar -> {
+            car.setId(id);
+            return carRepository.save(car);
+        }));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Car> find(@PathVariable("id") long id) {
+        return ResponseEntity.of(carRepository.findById(id));
     }
 }
