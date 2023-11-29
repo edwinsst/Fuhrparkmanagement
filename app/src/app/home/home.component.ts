@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {ToolBarComponent} from "../tool-bar/tool-bar.component";
-import {CalendarBigComponent} from "../calendar-big/calendar-big.component";
+import { CalendarBigComponent } from "../calendar-big/calendar-big.component";
 import {EventsComponent} from "../events/events.component";
 
 @Component({

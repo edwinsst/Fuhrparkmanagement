@@ -23,12 +23,13 @@ import { StatisticsComponent } from './statistics/statistics.component';
   bootstrap: [AppComponent],
   declarations: [
     AppComponent,
+
+    CalendarBigComponent,
   ],
   exports: [],
   imports: [
     MaterialModule,
     CalendarComponent,
-    CalendarBigComponent,
     ToolBarComponent,
     HomeComponent,
     BrowserAnimationsModule,

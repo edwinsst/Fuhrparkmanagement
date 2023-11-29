@@ -59,7 +59,7 @@ const colors: Record<string, EventColor> = {
 export class CalendarBigComponent {
   @ViewChild('modalContent', { static: true })
 
-  //modalContent: TemplateRef<any>;
+  modalContent: TemplateRef<any>;
 
   view: CalendarView = CalendarView.Month;
 
@@ -67,10 +67,9 @@ export class CalendarBigComponent {
 
   viewDate: Date = new Date();
 
-  //modalData: {
-   // action: string;
-    //event: CalendarEvent;
-  //};
+  modalData: {  action: string;
+    event: CalendarEvent;
+  };
 
   actions: CalendarEventAction[] = [
     {
