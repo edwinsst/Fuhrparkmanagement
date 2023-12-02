@@ -17,9 +17,11 @@ import {
 import { Subject } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
+  CalendarCommonModule,
   CalendarEvent,
   CalendarEventAction,
   CalendarEventTimesChangedEvent,
+  CalendarMonthModule,
   CalendarView,
 } from 'angular-calendar';
 import { EventColor } from 'calendar-utils';
@@ -40,7 +42,9 @@ const colors: Record<string, EventColor> = {
 };
 
 @Component({
-  selector: 'mwl-demo-component',
+  selector: 'calendar-big-component',
+  standalone: true,
+  imports: [CalendarCommonModule, CalendarMonthModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
     `
@@ -56,6 +60,7 @@ const colors: Record<string, EventColor> = {
   ],
   templateUrl: 'calendar-big.component.html',
 })
+
 export class CalendarBigComponent {
   @ViewChild('modalContent', { static: true })
 
@@ -201,7 +206,4 @@ export class CalendarBigComponent {
   closeOpenMonthViewDay() {
     this.activeDayIsOpen = false;
   }
-}
-
-class CalendarBigComponentImpl extends CalendarBigComponent {
 }

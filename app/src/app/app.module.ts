@@ -17,14 +17,16 @@ import { CalendarBigComponent } from './calendar-big/calendar-big.component';
 import { MaterialModule } from "./material/material.module";
 import { EditComponent } from './edit/edit.component';
 import { StatisticsComponent } from './statistics/statistics.component';
+import { FlatpickrModule} from "angularx-flatpickr";
+import { NgbModalModule} from "@ng-bootstrap/ng-bootstrap";
+import {FormsModule} from "@angular/forms";
+import {CommonModule} from "@angular/common";
 
 
 @NgModule({
   bootstrap: [AppComponent],
   declarations: [
     AppComponent,
-
-    CalendarBigComponent,
   ],
   exports: [],
   imports: [
@@ -33,11 +35,16 @@ import { StatisticsComponent } from './statistics/statistics.component';
     ToolBarComponent,
     HomeComponent,
     BrowserAnimationsModule,
+    CalendarBigComponent,
     EventsComponent,
     AddBookingComponent,
     EditComponent,
     StatisticsComponent,
     AppRoutingModule,
+    NgbModalModule,
+    CommonModule,
+    FormsModule,
+    FlatpickrModule.forRoot(),
     CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
     RouterOutlet
   ],
