@@ -31,7 +31,7 @@
   <div class="col-md-4">
     <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
   </div>
-  <mwl-calendar-month-view
+  <!--<mwl-calendar-month-view
     *ngSwitchCase="CalendarView.Month"
     [viewDate]="viewDate"
     [events]="events"
@@ -41,5 +41,5 @@
     (eventClicked)="handleEvent('Clicked', $event.event)"
     (eventTimesChanged)="eventTimesChanged($event)"
   >
-  </mwl-calendar-month-view>
+  </mwl-calendar-month-view>-->
 </div>

@@ -43,6 +43,8 @@ const colors: Record<string, EventColor> = {
 
 @Component({
   selector: 'calendar-big-component',
+  templateUrl: './calendar-big.component.html',
+  styleUrls: ['./calendar-big.component.css'],
   standalone: true,
   imports: [CalendarCommonModule, CalendarMonthModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -58,7 +60,7 @@ const colors: Record<string, EventColor> = {
       }
     `,
   ],
-  templateUrl: 'calendar-big.component.html',
+
 })
 
 export class CalendarBigComponent {
@@ -144,7 +146,7 @@ export class CalendarBigComponent {
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
       if (
-        (isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) ||
+        (isSameDay(this.viewDate, date) && this.activeDayIsOpen) ||
         events.length === 0
       ) {
         this.activeDayIsOpen = false;

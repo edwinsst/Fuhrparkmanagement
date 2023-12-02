@@ -9,7 +9,7 @@ import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {RouterOutlet} from "@angular/router";
 
-import { CalendarModule, DateAdapter } from 'angular-calendar';
+import {CalendarModule, CalendarMonthModule, DateAdapter} from 'angular-calendar';
 import { CalendarComponent } from "./calendar/calendar.component";
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { CalendarBigComponent } from './calendar-big/calendar-big.component';
