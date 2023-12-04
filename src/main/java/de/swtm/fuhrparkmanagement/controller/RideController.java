@@ -1,60 +1,44 @@
 package de.swtm.fuhrparkmanagement.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import de.swtm.fuhrparkmanagement.model.Ride;
-import de.swtm.fuhrparkmanagement.repository.CarRepository;
-import de.swtm.fuhrparkmanagement.repository.RideRepository;
-import jakarta.validation.Valid;
+import de.swtm.fuhrparkmanagement.api.RidesApi;
+import de.swtm.fuhrparkmanagement.model.RideDto;
+import de.swtm.fuhrparkmanagement.service.RideService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
+import java.util.List;
 
 @RestController
-@RequestMapping(path = "/rides")
 @RequiredArgsConstructor
-public class RideController {
+public class RideController implements RidesApi {
 
-    private final RideRepository rideRepository;
-    private final CarRepository carRepository;
+    private final RideService rideService;
 
-    @PostMapping
-    public ResponseEntity<Ride> create(@RequestBody @Valid @JsonView(Ride.Views.WithoutId.class) Ride ride) {
-        return ResponseEntity.of(carRepository.findById(ride.getCar().getId()).map(existingCar -> {
-            ride.setCar(existingCar);
-            return rideRepository.save(ride);
-        }));
+    @Override
+    public ResponseEntity<RideDto> create(RideDto body) {
+        return new ResponseEntity<>(rideService.create(body), HttpStatus.CREATED);
     }
 
-    @GetMapping
-    public Iterable<Ride> listAll() {
-        return rideRepository.findAll();
+    @Override
+    public ResponseEntity<List<RideDto>> listAll() {
+        return ResponseEntity.ok(rideService.listAll());
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") long id) {
-        Optional<Ride> ride = rideRepository.findById(id);
-        if (ride.isPresent()) {
-            rideRepository.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @Override
+    public ResponseEntity<RideDto> find(Long id) {
+        return ResponseEntity.ok(rideService.findById(id));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Ride> update(@PathVariable("id") long id,
-                                       @RequestBody @Valid @JsonView(Ride.Views.WithoutId.class) Ride ride)
-    {
-        return ResponseEntity.of(rideRepository.findById(id).map(existingCar -> {
-            ride.setId(id);
-            return rideRepository.save(ride);
-        }));
+    @Override
+    public ResponseEntity<RideDto> update(Long id, RideDto body) {
+        return ResponseEntity.ok(rideService.updateById(id, body));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Ride> find(@PathVariable("id") long id) {
-        return ResponseEntity.of(rideRepository.findById(id));
+    @Override
+    public ResponseEntity<Void> delete(Long id) {
+        rideService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
