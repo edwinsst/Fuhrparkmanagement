@@ -25,6 +25,9 @@ import {
   CalendarView,
 } from 'angular-calendar';
 import { EventColor } from 'calendar-utils';
+import {FormsModule} from "@angular/forms";
+import {FlatpickrModule} from "angularx-flatpickr";
+import {JsonPipe} from "@angular/common";
 
 const colors: Record<string, EventColor> = {
   red: {
@@ -42,25 +45,12 @@ const colors: Record<string, EventColor> = {
 };
 
 @Component({
-  selector: 'calendar-big-component',
+  selector: 'app-calendar-XD',
   templateUrl: './calendar-big.component.html',
   styleUrls: ['./calendar-big.component.css'],
   standalone: true,
-  imports: [CalendarCommonModule, CalendarMonthModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: [
-    `
-      h3 {
-        margin: 0 0 10px;
-      }
-
-      pre {
-        background-color: #f5f5f5;
-        padding: 15px;
-      }
-    `,
-  ],
-
+  imports: [CalendarCommonModule, CalendarMonthModule, FormsModule, FlatpickrModule, JsonPipe],
+  //changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class CalendarBigComponent {
@@ -70,7 +60,7 @@ export class CalendarBigComponent {
 
   view: CalendarView = CalendarView.Month;
 
-  CalendarView = CalendarView;
+  //CalendarView = CalendarView;
 
   viewDate: Date = new Date();
 
@@ -208,4 +198,6 @@ export class CalendarBigComponent {
   closeOpenMonthViewDay() {
     this.activeDayIsOpen = false;
   }
+
+  protected readonly CalendarView = CalendarView;
 }
