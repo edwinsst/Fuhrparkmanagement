@@ -52,10 +52,6 @@ paths:
                 $ref: "#/components/schemas/Car"
         "400":
           description: "Bad Request"
-          content:
-            'application/json':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
         "403":
           description: "Forbidden"
   /cars/{id}:
@@ -109,10 +105,6 @@ paths:
                 $ref: "#/components/schemas/Car"
         "400":
           description: "Bad Request"
-          content:
-            'application/json':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
         "403":
           description: "Forbidden"
         "404":
@@ -280,10 +272,6 @@ paths:
                 $ref: "#/components/schemas/Reservation"
         "400":
           description: "Bad Request"
-          content:
-            'application/json':
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
         "403":
           description: "Forbidden"
   /reservations/{id}:
@@ -429,6 +417,14 @@ components:
         available:
           type: "boolean"
           default: true
+        createdDate:
+          type: string
+          format: date-time
+          readOnly: true
+        deletedDate:
+          type: string
+          format: date-time
+          readOnly: true
       required:
         - licensePlate
         - modelName
@@ -458,6 +454,14 @@ components:
           format: "date-time"
         purpose:
           type: "string"
+        createdDate:
+          type: string
+          format: date-time
+          readOnly: true
+        deletedDate:
+          type: string
+          format: date-time
+          readOnly: true
       required:
         - carId
         - startAddress
@@ -466,7 +470,7 @@ components:
         - endDate
         - purpose
     Reservation:
-      type: object
+      type: "object"
       properties:
         id:
           type: "integer"
@@ -477,36 +481,20 @@ components:
         rideId:
           type: "integer"
           format: "int64"
-        created_date:
+        createdDate:
           type: string
           format: date-time
         deleted_date:
           type: string
           format: date-time
       required:
-        - id
         - userId
         - rideId
-        - created_date
-        - deleted_date
     Statistic:
       type: object
       properties:
         kilometers:
           type: "string"
-    ErrorResponse:
-      type: object
-      properties:
-        timestamp:
-          type: string
-        status:
-          type: integer
-        error:
-          type: string
-        message:
-          type: string
-        path:
-          type: string
   securitySchemes:
     bearerAuth:
       type: http

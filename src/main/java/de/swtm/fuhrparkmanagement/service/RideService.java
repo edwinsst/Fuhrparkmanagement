@@ -27,7 +27,7 @@ public class RideService {
     private final RideRepository rideRepository;
 
     public RideDto create(RideDto rideDto) {
-        checkRideConditions(rideDto);
+        checkRideValidations(rideDto);
         Ride ride = convertToEntity(rideDto);
         return convertToDto(rideRepository.save(ride));
     }
@@ -43,19 +43,24 @@ public class RideService {
     }
 
     public RideDto updateById(long id, RideDto rideDto) {
-        checkRideConditions(rideDto);
+        checkRideValidations(rideDto);
+        checkIfRideWithIdExists(id);
         Ride ride = convertToEntity(rideDto);
-        rideRepository.findById(id).orElseThrow(RideNotFoundException::new);
         ride.setId(id);
         return convertToDto(rideRepository.save(ride));
     }
 
     public void deleteById(long id) {
-        rideRepository.findById(id).orElseThrow(RideNotFoundException::new);
-        rideRepository.deleteById(id);
+        Ride ride = rideRepository.findById(id).orElseThrow(RideNotFoundException::new);
+        ride.setDeletedDate(OffsetDateTime.now());
+        rideRepository.save(ride);
     }
 
-    private void checkRideConditions(RideDto rideDto) {
+    private void checkIfRideWithIdExists(long id) {
+        rideRepository.findById(id).orElseThrow(RideNotFoundException::new);
+    }
+
+    private void checkRideValidations(RideDto rideDto) {
         if (rideDto.getEndDate().isBefore(rideDto.getStartDate())) {
             throw new IllegalRideException();
         }
@@ -86,6 +91,9 @@ public class RideService {
     private Ride convertToEntity(RideDto rideDto) {
         Ride ride = modelMapper.map(rideDto, Ride.class);
         Car car = carRepository.findById(rideDto.getCarId()).orElseThrow(IllegalRideException::new);
+        if (car.getDeletedDate() != null) {
+            throw new IllegalRideException();
+        }
         ride.setCar(car);
         return ride;
     }

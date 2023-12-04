@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,8 +52,9 @@ public class CarController implements CarsApi {
 
     @Override
     public ResponseEntity<Void> delete(Long id) {
-        carRepository.findById(id).orElseThrow(CarNotFoundException::new);
-        carRepository.deleteById(id);
+        Car car = carRepository.findById(id).orElseThrow(CarNotFoundException::new);
+        car.setDeletedDate(OffsetDateTime.now());
+        carRepository.save(car);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

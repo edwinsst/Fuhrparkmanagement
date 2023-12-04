@@ -174,6 +174,6 @@ public class CarControllerTests {
                 .andExpect(status().isOk());
 
         verify(carRepository, times(1)).findById(1L);
-        verify(carRepository, times(1)).deleteById(1L);
+        verify(carRepository, times(1)).save(any(Car.class));
     }
 }

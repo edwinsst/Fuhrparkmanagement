@@ -24,6 +24,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(IllegalReservationException.class)
+    public ResponseEntity<?> handleIllegalReservationException() {
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> handleRuntimeException() {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
