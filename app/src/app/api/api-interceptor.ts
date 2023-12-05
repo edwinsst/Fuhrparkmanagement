@@ -1,11 +1,13 @@
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
-import {inject, Injectable} from "@angular/core";
-import {Observable} from "rxjs";
+import {Injectable} from "@angular/core";
+import {first, mergeMap, Observable} from "rxjs";
 import {AUTH_API_URL, AuthenticationService} from "../authentication.service";
 
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor {
-  authService = inject(AuthenticationService);
+
+  constructor(private authService: AuthenticationService) {
+  }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (req.url.startsWith(AUTH_API_URL)) {
@@ -13,16 +15,18 @@ export class ApiInterceptor implements HttpInterceptor {
     }
 
     if (!this.authService.shortTimeToken) {
-      // this.authService.generateShortTimeToken();
-      console.error('no short time token');
+      return this.authService.generateShortTimeToken()
+        .pipe(first(), mergeMap(_ => this.withAuthentication(req, next)));
     }
 
-    req = req.clone({
-      setHeaders: {
-        'Authentication': 'Bearer ' + this.authService.shortTimeToken
-      }
-    });
+    return this.withAuthentication(req, next);
+  }
 
-    return next.handle(req);
+  withAuthentication(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return next.handle(req.clone({
+      setHeaders: {
+        'Authorization': 'Bearer ' + this.authService.shortTimeToken
+      }
+    }));
   }
 }

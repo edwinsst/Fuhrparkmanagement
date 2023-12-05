@@ -4,7 +4,7 @@ export interface Car {
   available?: boolean;
   createdDate?: string;
   deletedDate?: string;
-  fuelType: 'PETROL' | 'DIESEL' | 'ELECTRIC';
+  fuelType: string;
   id?: number;
   licensePlate: string;
   location: string;

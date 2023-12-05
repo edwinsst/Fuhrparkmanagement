@@ -17,7 +17,7 @@ import {
   addHours, startOfMonth,
 } from 'date-fns';
 import {MatDialog} from "@angular/material/dialog";
-import {ConfirmContentDialog} from "../add-booking/add-booking.component";
+import {ConfirmCarCreateDialog} from "../add-booking/add-booking.component";
 import {CommonModule} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
 
@@ -52,7 +52,7 @@ export class CalendarBigComponent {
   }
 
   eventClicked(event: CalendarEvent) {
-    this.dialog.open(ConfirmContentDialog);
+    this.dialog.open(ConfirmCarCreateDialog);
   }
 
   dayClicked(date: Date) {

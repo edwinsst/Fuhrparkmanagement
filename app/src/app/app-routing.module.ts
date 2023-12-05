@@ -6,7 +6,7 @@ import {StatisticsComponent} from "./statistics/statistics.component";
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {LoginComponent} from "./login/login.component";
-
+import {loginGuard} from "./login.guard";
 
 const routes: Routes = [
   {
@@ -14,19 +14,19 @@ const routes: Routes = [
   },
 
   {
-    path: 'new', component: AddBookingComponent
+    path: 'new', component: AddBookingComponent, canActivate: [ loginGuard ]
   },
 
   {
-    path: 'edit', component: EditComponent
+    path: 'edit', component: EditComponent, canActivate: [ loginGuard ]
   },
 
   {
-    path: 'statistics', component: StatisticsComponent
+    path: 'statistics', component: StatisticsComponent, canActivate: [ loginGuard ]
   },
 
   {
-    path: 'home', component: HomeComponent
+    path: 'home', component: HomeComponent, canActivate: [ loginGuard ]
   }
 ];
 

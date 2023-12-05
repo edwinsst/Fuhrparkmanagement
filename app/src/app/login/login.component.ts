@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MaterialModule} from "../material/material.module";
@@ -29,7 +29,7 @@ export class LoginComponent {
       return;
     }
     this.authService.generateShortTimeToken()
-      .subscribe(() => this.router.navigate([ '/home' ]));
+      .subscribe({ next: () => this.router.navigate([ '/home' ]) });
   }
 
   login(): void {

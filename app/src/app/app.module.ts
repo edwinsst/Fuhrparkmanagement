@@ -27,7 +27,6 @@ export const API_INTERCEPTOR_PROVIDER: Provider = {
   multi: true
 };
 
-
 @NgModule({
   declarations: [
     AppComponent

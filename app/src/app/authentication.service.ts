@@ -29,7 +29,7 @@ export class AuthenticationService {
 
   generateShortTimeToken(): Observable<string> {
     return this.httpClient.post<any>(AUTH_API_URL + '/tokens/renew', null,
-      { headers: new HttpHeaders({ 'Authorization' : 'Bearer ' + this.longTimeToken }) })
+      {headers: new HttpHeaders({'Authorization': 'Bearer ' + this.longTimeToken})})
       .pipe(map(result => this.shortTimeToken = result.token));
   }
 
