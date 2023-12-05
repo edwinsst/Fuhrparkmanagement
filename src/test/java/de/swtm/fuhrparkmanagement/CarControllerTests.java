@@ -17,10 +17,10 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -53,7 +53,7 @@ public class CarControllerTests {
         Car testCar = testCar();
         when(carRepository.findAll()).thenReturn(List.of(testCar));
 
-        mockMvc.perform(get("/cars/list").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/cars").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", Matchers.hasSize(1)))
                 .andExpect(jsonPath("$[0].id").value(testCar.getId()))
@@ -69,11 +69,42 @@ public class CarControllerTests {
     }
 
     @Test
+    void savedCarShouldBeFound() throws Exception {
+        Car testCar = testCar();
+        when(carRepository.findById(1L)).thenReturn(Optional.of(testCar()));
+
+        mockMvc.perform(get("/cars/1").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(testCar.getId()))
+                .andExpect(jsonPath("$.licensePlate").value(testCar.getLicensePlate()))
+                .andExpect(jsonPath("$.modelName").value(testCar.getModelName()))
+                .andExpect(jsonPath("$.fuelType").value(testCar.getFuelType().name()))
+                .andExpect(jsonPath("$.location").value(testCar.getLocation()))
+                .andExpect(jsonPath("$.seats").value(testCar.getSeats()))
+                .andExpect(jsonPath("$.range").value(testCar.getRange()))
+                .andExpect(jsonPath("$.available").value(testCar.isAvailable()));
+
+        verify(carRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    void nonExistingCarShouldNotBeFound() throws Exception {
+        when(carRepository.findById(1L)).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/cars/1").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+        verify(carRepository, times(1)).findById(1L);
+    }
+
+    @Test
     void validCarShouldBeCreated() throws Exception {
         Car testCar = testCar();
-        mockMvc.perform(post("/cars/create").contentType(MediaType.APPLICATION_JSON)
+        when(carRepository.save(testCar)).thenReturn(testCar);
+
+        mockMvc.perform(post("/cars").contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(testCar)))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         verify(carRepository, times(1)).save(testCar);
     }
@@ -90,7 +121,7 @@ public class CarControllerTests {
                 }
                 """;
 
-        mockMvc.perform(post("/cars/create").contentType(MediaType.APPLICATION_JSON).content(incompleteBody))
+        mockMvc.perform(post("/cars").contentType(MediaType.APPLICATION_JSON).content(incompleteBody))
                 .andExpect(status().isBadRequest());
 
         verify(carRepository, never()).save(any());
@@ -110,9 +141,39 @@ public class CarControllerTests {
                 }
                 """;
 
-        mockMvc.perform(post("/cars/create").contentType(MediaType.APPLICATION_JSON).content(invalidBody))
+        mockMvc.perform(post("/cars").contentType(MediaType.APPLICATION_JSON).content(invalidBody))
                 .andExpect(status().isBadRequest());
 
         verify(carRepository, never()).save(any());
+    }
+
+    @Test
+    void validCarShouldBeUpdated() throws Exception {
+        Car savedCar = testCar();
+
+        Car updatedCar = testCar();
+        updatedCar.setLocation("Karlsruhe");
+
+        when(carRepository.findById(1L)).thenReturn(Optional.of(savedCar));
+        when(carRepository.save(updatedCar)).thenReturn(updatedCar);
+
+        mockMvc.perform(put("/cars/1").contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(updatedCar)))
+                .andExpect(status().isOk());
+
+        verify(carRepository, times(1)).findById(1L);
+        verify(carRepository, times(1)).save(updatedCar);
+    }
+
+    @Test
+    void validCarShouldBeDeleted() throws Exception {
+        Car testCar = testCar();
+        when(carRepository.findById(1L)).thenReturn(Optional.of(testCar));
+
+        mockMvc.perform(delete("/cars/1").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(carRepository, times(1)).findById(1L);
+        verify(carRepository, times(1)).save(any(Car.class));
     }
 }

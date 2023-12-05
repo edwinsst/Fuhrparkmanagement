@@ -2,29 +2,30 @@ package de.swtm.fuhrparkmanagement.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-public class Ride {
+public class Ride extends TemporalEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     private Car car;
 
     private String startAddress;
 
     private String destinationAddress;
 
-    // @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime startDate;
+    private OffsetDateTime startDate;
 
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime endDate;
+    private OffsetDateTime endDate;
 
     private String purpose;
 }

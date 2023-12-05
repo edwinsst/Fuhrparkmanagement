@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {map, Observable} from "rxjs";
 
-const AUTH_API_URL = 'http://localhost:8082/usermanagement/v2';
+export const AUTH_API_URL = 'http://localhost:8082/usermanagement/v2';
 const AUTH_STORAGE_KEY = 'longTimeToken';
 
 @Injectable({
