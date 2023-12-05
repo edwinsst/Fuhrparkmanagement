@@ -1,7 +1,6 @@
 package de.swtm.fuhrparkmanagement.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -10,7 +9,8 @@ import lombok.EqualsAndHashCode;
 @Entity
 public class RideReservation extends Reservation {
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     private Ride ride;
 
 }

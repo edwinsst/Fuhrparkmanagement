@@ -1,0 +1,7 @@
+{
+  "modelPackage": "de.swtm.fuhrparkmanagement.model",
+  "apiPackage": "de.swtm.fuhrparkmanagement.api",
+  "dateLibrary": "java8",
+  "hideGenerationTimestamp": true,
+  "interfaceOnly": true
+}

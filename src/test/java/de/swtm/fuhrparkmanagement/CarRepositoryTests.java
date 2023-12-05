@@ -46,7 +46,9 @@ public class CarRepositoryTests {
     @Order(2)
     void savedCarShouldFoundWithId() {
         Car savedCar = carRepository.findById(1L).orElseThrow();
-        assertThat(savedCar).usingRecursiveComparison().ignoringFields("id").isEqualTo(testCar());
+        assertThat(savedCar).usingRecursiveComparison()
+                .ignoringFields("id", "createdDate")
+                .isEqualTo(testCar());
     }
 
     @Test
@@ -54,7 +56,9 @@ public class CarRepositoryTests {
     void savedCarShouldBeFoundWhenFindingAll() {
         Iterable<Car> savedCars = carRepository.findAll();
         assertThat(savedCars).isNotEmpty();
-        assertThat(savedCars).element(0).usingRecursiveComparison().ignoringFields("id").isEqualTo(testCar());
+        assertThat(savedCars).element(0).usingRecursiveComparison()
+                .ignoringFields("id", "createdDate")
+                .isEqualTo(testCar());
     }
 
     @Test
