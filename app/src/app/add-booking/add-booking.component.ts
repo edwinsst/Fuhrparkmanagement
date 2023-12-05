@@ -33,6 +33,10 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
   ],
   standalone: true
 })
+
+
+
+
 export class AddBookingComponent {
   displayedColumns: string[] = ['id', 'licensePlate', 'modelName', 'fuelType', 'location', 'seats', 'range', 'available'];
   loadedCars: Car[] = [];
@@ -54,7 +58,7 @@ export class AddBookingComponent {
     endBooking: new FormControl('', [Validators.required, Validators.min(1)]),
     passengers: new FormControl('', [Validators.required, Validators.min(1)]),
   });
-  picker: any;
+
 
   constructor(private http: HttpClient, public dialog: MatDialog) {}
 
@@ -88,6 +92,56 @@ export class AddBookingComponent {
     });
   }
 }
+
+/*export class Add_BookingComponent {
+  displayedColumns: string[] = ['id', 'licensePlate', 'modelName', 'fuelType', 'location', 'seats', 'range', 'available'];
+  loadedCars: Car[] = [];
+
+  bookingCreateForm = new FormGroup({
+    purpose: new FormControl('', [Validators.required]),
+    startingAddress: new FormControl('', [Validators.required]),
+    destinationAddress: new FormControl('', [Validators.required]),
+    startBooking: new FormControl('', [Validators.required]),
+    endBooking: new FormControl('', [Validators.required, Validators.min(1)]),
+    passengers: new FormControl('', [Validators.required, Validators.min(1)]),
+  });
+  picker: any;
+
+
+
+  constructor(private http: HttpClient, public dialog: MatDialog) {}
+
+  ngOnInit(): void {
+    this.getBookings();
+  }
+
+  getBookings(): void {
+    this.http.get<Car[]>('http://localhost:8080/booking/list').subscribe(data => this.loadedCars = data);
+  }
+
+  createBooking(car: Car): void {
+    let { _, ...carWithoutId }: any = car;
+    this.http.post('http://localhost:8080/booking/create', carWithoutId).subscribe(data => console.log(data));
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(ConfirmContentDialog);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const purpose = this.bookingCreateForm.controls.purpose.getRawValue() || "";
+        const startingAddress = this.bookingCreateForm.controls.startingAddress.getRawValue() || "";
+        const destinationAddress = parseInt(this.bookingCreateForm.controls.destinationAddress.getRawValue() || "");
+        const startBooking = this.bookingCreateForm.controls.startBooking.getRawValue() || "";
+        const endBooking = parseInt(this.bookingCreateForm.controls.endBooking.getRawValue() || "");
+        const passengers = parseInt(this.bookingCreateForm.controls.passengers.getRawValue() || "");
+
+        this.createBooking(new Car(0, purpose, startingAddress, destinationAddress, startBooking, endBooking, passengers));
+      }
+    });
+  }
+}*/
+
 
 @Component({
   selector: 'confirm-dialog',

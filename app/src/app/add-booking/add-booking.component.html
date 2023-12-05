@@ -136,7 +136,7 @@
           <mat-error *ngIf="bookingCreateForm.controls.passengers.hasError('required')">Sie müssen etwas eingeben</mat-error>
           <mat-error *ngIf="bookingCreateForm.controls.passengers.hasError('min')">Es muss mindestens einen Sitz geben</mat-error>
         </mat-form-field>
-        <button mat-raised-button color="primary" [disabled]="!carCreateForm.valid" (click)="openDialog()">Fahrt buchen</button>
+        <button mat-raised-button color="primary" [disabled]="!bookingCreateForm.valid" (click)="openDialog()">Fahrt buchen</button>
       </form>
     </mat-card-content>
   </mat-card>
