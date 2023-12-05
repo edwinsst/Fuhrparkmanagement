@@ -11,6 +11,7 @@ import {NgIf} from "@angular/common";
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {HttpClient} from "@angular/common/http";
 import {ToolBarComponent} from "../tool-bar/tool-bar.component";
+import {MatDatepickerModule} from "@angular/material/datepicker";
 
 @Component({
   selector: 'app-add-booking',
@@ -27,7 +28,8 @@ import {ToolBarComponent} from "../tool-bar/tool-bar.component";
     ReactiveFormsModule,
     NgIf,
     MatDialogModule,
-    ToolBarComponent
+    ToolBarComponent,
+    MatDatepickerModule
   ],
   standalone: true
 })
@@ -43,6 +45,16 @@ export class AddBookingComponent {
     seats: new FormControl('', [Validators.required, Validators.min(1)]),
     range: new FormControl('', [Validators.required, Validators.min(1)]),
   });
+
+  bookingCreateForm = new FormGroup({
+    purpose: new FormControl('', [Validators.required]),
+    startingAddress: new FormControl('', [Validators.required]),
+    destinationAddress: new FormControl('', [Validators.required]),
+    startBooking: new FormControl('', [Validators.required]),
+    endBooking: new FormControl('', [Validators.required, Validators.min(1)]),
+    passengers: new FormControl('', [Validators.required, Validators.min(1)]),
+  });
+  picker: any;
 
   constructor(private http: HttpClient, public dialog: MatDialog) {}
 

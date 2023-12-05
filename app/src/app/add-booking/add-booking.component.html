@@ -94,5 +94,52 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
+  <br><br><br>
+
+  <mat-card>
+    <mat-card-content>
+      <form [formGroup]="bookingCreateForm">
+        <mat-form-field>
+          <mat-label>Zweck</mat-label>
+          <input matInput formControlName="purpose" placeholder="Geschäftsreise">
+          <mat-error *ngIf="bookingCreateForm.controls.purpose.hasError('required')">Sie müssen etwas eingeben</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Startadresse</mat-label>
+          <input matInput formControlName="startaddress" placeholder="Standort Feuerbach">
+          <mat-error *ngIf="bookingCreateForm.controls.startingAddress.hasError('required')">Sie müssen etwas eingeben</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Zieladresse</mat-label>
+          <input matInput formControlName="destinationaddress" placeholder="Standort Friedrichshafen">
+          <mat-error *ngIf="bookingCreateForm.controls.destinationAddress.hasError('required')">Sie müssen etwas eingeben</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Buchungszeitraum</mat-label>
+          <mat-date-range-input [rangePicker]="picker">
+            <input matStartDate placeholder="Startdatum">
+            <input matEndDate placeholder="Enddatum">
+          </mat-date-range-input>
+          <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+        <!--<mat-form-field>
+          <mat-label>Buchungsende</mat-label>
+          <input matInput formControlName="seats" type="number" placeholder="Bsp. 5">
+          <mat-error *ngIf="bookingCreateForm.controls.endBooking.hasError('required')">Sie müssen etwas eingeben</mat-error>
+          <mat-error *ngIf="bookingCreateForm.controls.endBooking.hasError('min')">Es muss mindestens einen Sitz geben</mat-error>
+        </mat-form-field> -->
+        <mat-form-field>
+          <mat-label>Anzahl Mitfahrer</mat-label>
+          <input matInput formControlName="seats" type="number" placeholder="Bsp. 4">
+          <mat-error *ngIf="bookingCreateForm.controls.passengers.hasError('required')">Sie müssen etwas eingeben</mat-error>
+          <mat-error *ngIf="bookingCreateForm.controls.passengers.hasError('min')">Es muss mindestens einen Sitz geben</mat-error>
+        </mat-form-field>
+        <button mat-raised-button color="primary" [disabled]="!carCreateForm.valid" (click)="openDialog()">Fahrt buchen</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
 </div>
 
