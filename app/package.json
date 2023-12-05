@@ -8,7 +8,8 @@
     "build:ci": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "test:ci": "ng test --browsers=ChromeHeadless --watch=false"
+    "test:ci": "ng test --browsers=ChromeHeadless --watch=false",
+    "genswagger": "ng-openapi-gen --input ../swagger/swagger-fuhrparkmanagement.yaml --output src/app/api"
   },
   "private": true,
   "dependencies": {
