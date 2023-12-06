@@ -9,15 +9,15 @@
     </a>
 
     <a routerLink="/new" mat-menu-item >
-      <mat-icon>add_circle</mat-icon>New Booking
+      <mat-icon>add_circle</mat-icon>Fahrt Buchen
     </a>
     <a routerLink="/edit" mat-menu-item >
-      <mat-icon>edit</mat-icon>Edit Booking
+      <mat-icon>edit</mat-icon>Buchung bearbeiten
     </a>
 
     <button mat-menu-item [matMenuTriggerFor]="deleteItem">
       <mat-icon>delete</mat-icon>
-      <span>Delete Booking </span>
+      <span>Buchung löschen </span>
     </button>
     <mat-menu #deleteItem=matMenu>
       <button mat-menu-item>Booking 1</button>
@@ -27,7 +27,10 @@
       <button mat-menu-item>Booking 5</button>
     </mat-menu>
     <a routerLink="/statistics" mat-menu-item >
-      <mat-icon>poll</mat-icon>Statistics
+      <mat-icon>poll</mat-icon>Statistiken
+    </a>
+    <a routerLink="/logout" mat-menu-item >
+      <mat-icon>power_settings_new</mat-icon>Ausloggen
     </a>
   </mat-menu>
   <span>Poolfahrzeug-Buchung</span>
