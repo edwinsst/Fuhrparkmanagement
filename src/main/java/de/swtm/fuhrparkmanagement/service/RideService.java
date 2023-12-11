@@ -35,7 +35,7 @@ public class RideService {
     public List<RideDto> listAll() {
         List<RideDto> response = new ArrayList<>();
         for (Ride ride : rideRepository.findAll()) {
-            if (ride.getDeletedDate() != null) {
+            if (ride.getDeletedDate() == null) {
                 response.add(convertToDto(ride));
             }
         }

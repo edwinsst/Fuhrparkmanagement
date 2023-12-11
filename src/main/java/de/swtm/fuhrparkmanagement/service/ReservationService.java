@@ -34,7 +34,7 @@ public class ReservationService {
     public List<ReservationDto> listAll() {
         List<ReservationDto> response = new ArrayList<>();
         for (RideReservation rideReservation : rideReservationRepository.findAll()) {
-            if (rideReservation.getDeletedDate() != null) {
+            if (rideReservation.getDeletedDate() == null) {
                 response.add(convertToDto(rideReservation));
             }
         }
