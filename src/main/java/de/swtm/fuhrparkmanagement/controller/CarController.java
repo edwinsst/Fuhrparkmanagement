@@ -32,7 +32,11 @@ public class CarController implements CarsApi {
     @Override
     public ResponseEntity<List<CarDto>> listAll() {
         List<CarDto> response = new ArrayList<>();
-        carRepository.findAll().forEach(car -> response.add(convertToDto(car)));
+        for (Car car : carRepository.findAll()) {
+            if (car.getDeletedDate() != null) {
+                response.add(convertToDto(car));
+            }
+        }
         return ResponseEntity.ok(response);
     }
 
