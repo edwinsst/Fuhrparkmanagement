@@ -36,7 +36,10 @@ export class AuthenticationService {
   logout(): void {
     this.httpClient.post(AUTH_API_URL + '/tokens/revoke', null,
       { headers: new HttpHeaders({ 'Authorization': 'Bearer ' + this.longTimeToken }) })
-      .subscribe(result => this.longTimeToken = '');
+      .subscribe(result => {
+        this.longTimeToken = '';
+        this.shortTimeToken = '';
+      });
     localStorage.clear();
   }
 }

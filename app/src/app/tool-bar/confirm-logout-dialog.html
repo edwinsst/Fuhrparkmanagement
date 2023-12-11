@@ -3,6 +3,6 @@
   <p>Möchten Sie sich Ausloggen?</p>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button color="warn" mat-dialog-close>Abbrechen</button>
+  <button mat-button color="warn" [mat-dialog-close]="false">Abbrechen</button>
   <button mat-raised-button color="primary" [mat-dialog-close]="true">Fortfahren</button>
 </mat-dialog-actions>

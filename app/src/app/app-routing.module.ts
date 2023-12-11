@@ -28,10 +28,6 @@ const routes: Routes = [
 
   {
     path: 'home', component: HomeComponent, canActivate: [ loginGuard ]
-  },
-
-  {
-    path: 'logout', component: LogoutComponent, canActivate: [ loginGuard ]
   }
 ];
 
