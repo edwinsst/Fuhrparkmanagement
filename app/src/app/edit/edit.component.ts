@@ -8,7 +8,7 @@ import {EventsComponent} from "../events/events.component";
   styleUrls: ['./edit.component.css'],
   imports: [
     ToolBarComponent,
-    EventsComponent
+    EventsComponent,
   ],
   standalone: true
 })

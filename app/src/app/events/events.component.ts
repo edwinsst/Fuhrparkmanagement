@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import {MatTableModule} from '@angular/material/table';
 import {MatButtonModule} from "@angular/material/button";
+import {MatDividerModule} from "@angular/material/divider";
+import {MatIconModule} from "@angular/material/icon";
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 
 export interface PeriodicElement {
   name: string;
@@ -24,9 +27,28 @@ const ELEMENT_DATA: PeriodicElement[] = [
   templateUrl: './events.component.html',
   styleUrls: ['./events.component.css'],
   standalone: true,
-  imports: [MatTableModule, MatButtonModule]
+  imports: [MatTableModule, MatButtonModule, MatDividerModule, MatIconModule, MatButtonModule, MatDialogModule]
 })
 export class EventsComponent {
-  displayedColumns: string[] = ['position', 'name', 'car', 'licensePlate', 'time'];
+  displayedColumns: string[] = ['position', 'name', 'car', 'licensePlate', 'time', 'actions'];
   dataSource = ELEMENT_DATA;
+
+  constructor(public dialog: MatDialog) {}
+
+  editBooking() {
+    const dialogRef = this.dialog.open(DialogContentExampleDialog);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
 }
+
+@Component({
+  selector: 'dialog-content-example-dialog',
+  templateUrl: 'dialog-content-example-dialog.html',
+  standalone: true,
+  imports: [MatDialogModule, MatButtonModule],
+})
+export class DialogContentExampleDialog {}
+

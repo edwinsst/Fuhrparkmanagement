@@ -1,3 +1,11 @@
 table {
   width: 100%;
 }
+section {
+  display: table;
+}
+
+.buttonedit {
+  width: 3em;
+  height: 3em;
+}

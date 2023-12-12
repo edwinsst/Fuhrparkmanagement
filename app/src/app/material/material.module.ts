@@ -8,6 +8,8 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatCardModule} from "@angular/material/card";
 import {MatInputModule} from "@angular/material/input";
+import {MatDividerModule} from '@angular/material/divider';
+
 
 const MaterialComponents =[
   MatNativeDateModule,
@@ -17,7 +19,8 @@ const MaterialComponents =[
   MatButtonModule,
   MatToolbarModule,
   MatCardModule,
-  MatInputModule
+  MatInputModule,
+  MatDividerModule
 ];
 
 
