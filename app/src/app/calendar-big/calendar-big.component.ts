@@ -17,9 +17,10 @@ import {
   addHours, startOfMonth,
 } from 'date-fns';
 import {MatDialog} from "@angular/material/dialog";
-import {ConfirmCarCreateDialog} from "../add-booking/add-booking.component";
 import {CommonModule} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
+import {ConfirmCarCreateDialog} from "../car/car.component";
+import {RideCreateDialogComponent} from "../dialogs/ride-create-dialog.component";
 
 @Component({
   selector: 'app-calendar-big',
@@ -61,6 +62,10 @@ export class CalendarBigComponent {
 
   handleMoreEvent(e: any , events: any[]) {
 
+  }
+
+  openRideCreateDialog(): void {
+    const dialogRef = this.dialog.open(RideCreateDialogComponent);
   }
 
   protected readonly CalendarView = CalendarView;

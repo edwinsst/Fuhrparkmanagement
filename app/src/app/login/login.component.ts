@@ -46,4 +46,15 @@ export class LoginComponent {
         error: () => this.wrongCredentials = true
       });
   }
+
+  triggerLog({e}: { e: any }): void{
+    if(e.pointerType === 'mouse'){
+      console.log(e);
+      this.hidePassword = !this.hidePassword;
+    }else {
+      console.log(e);
+      this.login();
+    }
+  }
+
 }

@@ -16,7 +16,7 @@
       <mat-form-field>
         <mat-label>Passwort</mat-label>
         <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'">
-        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+        <button tabindex="-1" mat-icon-button matSuffix (click)="triggerLog( {e : $event})" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
           <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
         <mat-error *ngIf="loginForm.controls.password.hasError('required')">Sie müssen etwas eingeben</mat-error>

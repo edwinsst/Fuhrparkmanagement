@@ -33,7 +33,11 @@ public class ReservationService {
 
     public List<ReservationDto> listAll() {
         List<ReservationDto> response = new ArrayList<>();
-        rideReservationRepository.findAll().forEach(rideReservation -> response.add(convertToDto(rideReservation)));
+        for (RideReservation rideReservation : rideReservationRepository.findAll()) {
+            if (rideReservation.getDeletedDate() == null) {
+                response.add(convertToDto(rideReservation));
+            }
+        }
         return response;
     }
 
