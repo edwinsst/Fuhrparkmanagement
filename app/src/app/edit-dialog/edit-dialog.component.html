@@ -1,0 +1,83 @@
+<h2 mat-dialog-title>Fahrt anlegen</h2>
+<mat-dialog-content>
+  <mat-stepper [linear]="true" #stepper>
+    <mat-step [stepControl]="rideCreateStep1Form" label="Basisinformationen">
+      <form [formGroup]="rideCreateStep1Form">
+        <!-- <ng-template matStepLabel>Basisinformationen</ng-template> -->
+        <div>
+          <mat-form-field>
+            <mat-label>Zweck</mat-label>
+            <input matInput placeholder="Geschäftsreise" formControlName="purpose">
+            <mat-error *ngIf="rideCreateStep1Form.controls.purpose.hasError('required')">Sie müssen etwas eingeben</mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-label>Buchungszeitraum</mat-label>
+            <mat-date-range-input #dateRangePicker [rangePicker]="picker">
+              <input matStartDate formControlName="startDate" placeholder="Startdatum">
+              <input matEndDate formControlName="endDate" placeholder="Enddatum">
+            </mat-date-range-input>
+            <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Startzeit</mat-label>
+            <input matInput formControlName="startTime" type="time">
+            <mat-error *ngIf="rideCreateStep1Form.controls.startTime.hasError('required')">Sie müssen etwas eingeben</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Endzeit</mat-label>
+            <input matInput formControlName="endTime" type="time">
+            <mat-error *ngIf="rideCreateStep1Form.controls.endTime.hasError('required')">Sie müssen etwas eingeben</mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-label>Startadresse</mat-label>
+            <input matInput [formControl]="rideCreateStep1Form.controls.startingAddress" placeholder="Feuerbach" [matAutocomplete]="autoStart">
+            <mat-autocomplete #autoStart="matAutocomplete">
+              <mat-option *ngFor="let option of (startingAddressOptions | async)" [value]="option">{{ option }}</mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="rideCreateStep1Form.controls.startingAddress.hasError('required')">Sie müssen etwas eingeben</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Zieladresse</mat-label>
+            <input matInput [formControl]="rideCreateStep1Form.controls.destinationAddress" placeholder="Friedrichshafen" [matAutocomplete]="autoStop">
+            <mat-autocomplete #autoStop="matAutocomplete">
+              <mat-option *ngFor="let option of (destinationAddressOptions | async)" [value]="option">{{ option }}</mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="rideCreateStep1Form.controls.destinationAddress.hasError('required')">Sie müssen etwas eingeben</mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <button mat-button matStepperNext>Weiter</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step label="Auto auswählen">
+      <form [formGroup]="rideCreateStep2Form">
+        <div>
+
+        </div>
+        <div>
+          <button mat-button matStepperPrevious>Zurück</button>
+          <button mat-button matStepperNext>Weiter</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+      <p>You are now done.</p>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button (click)="stepper.reset()">Reset</button>
+      </div>
+    </mat-step>
+  </mat-stepper>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button color="warn" mat-dialog-close>Abbrechen</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="true">Übernehmen</button>
+</mat-dialog-actions>

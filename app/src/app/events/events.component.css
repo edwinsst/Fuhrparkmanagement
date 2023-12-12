@@ -5,7 +5,13 @@ section {
   display: table;
 }
 
-.buttonedit {
+.buttonEdit {
   width: 3em;
   height: 3em;
 }
+
+.buttonDelete {
+  width: 3em;
+  height: 3em;
+}
+

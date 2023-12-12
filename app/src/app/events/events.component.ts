@@ -4,6 +4,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatDividerModule} from "@angular/material/divider";
 import {MatIconModule} from "@angular/material/icon";
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {EditDialogComponent} from "../edit-dialog/edit-dialog.component";
 
 export interface PeriodicElement {
   name: string;
@@ -36,7 +37,15 @@ export class EventsComponent {
   constructor(public dialog: MatDialog) {}
 
   editBooking() {
-    const dialogRef = this.dialog.open(DialogContentExampleDialog);
+    const dialogRef = this.dialog.open(EditDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
+  deleteBooking() {
+    const dialogRef = this.dialog.open(DialogDelete);
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
@@ -45,10 +54,19 @@ export class EventsComponent {
 }
 
 @Component({
-  selector: 'dialog-content-example-dialog',
-  templateUrl: 'dialog-content-example-dialog.html',
+  selector: 'dialog-edit',
+  templateUrl: 'dialog-edit.html',
   standalone: true,
   imports: [MatDialogModule, MatButtonModule],
 })
-export class DialogContentExampleDialog {}
+export class DialogEdit {}
+
+@Component({
+  selector: 'dialog-delete',
+  templateUrl: 'dialog-delete.html',
+  standalone: true,
+  imports: [MatDialogModule, MatButtonModule],
+})
+export class DialogDelete {}
+
 

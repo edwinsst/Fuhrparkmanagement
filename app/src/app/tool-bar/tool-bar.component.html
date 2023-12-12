@@ -11,23 +11,9 @@
       </a>
 
       <a routerLink="/new" mat-menu-item >
-        <mat-icon>add_circle</mat-icon>Fahrt Buchen
-      </a>
-      <a routerLink="/edit" mat-menu-item >
-        <mat-icon>edit</mat-icon>Buchung bearbeiten
+        <mat-icon>add_circle</mat-icon>Fahrt buchen
       </a>
 
-      <button mat-menu-item [matMenuTriggerFor]="deleteItem">
-        <mat-icon>delete</mat-icon>
-        <span>Buchung löschen </span>
-      </button>
-      <mat-menu #deleteItem=matMenu>
-        <button mat-menu-item>Booking 1</button>
-        <button mat-menu-item>Booking 2</button>
-        <button mat-menu-item>Booking 3</button>
-        <button mat-menu-item>Booking 4</button>
-        <button mat-menu-item>Booking 5</button>
-      </mat-menu>
       <a routerLink="/cars" mat-menu-item>
         <mat-icon>directions_car</mat-icon>Autos verwalten
       </a>
