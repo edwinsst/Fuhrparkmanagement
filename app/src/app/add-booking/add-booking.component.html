@@ -139,7 +139,7 @@
           <mat-select formControlName="car">
             <mat-option *ngFor="let car of this.loadedCars;" value="{{ car.id }}">{{ car.modelName }}</mat-option>
           </mat-select>
-          <mat-error *ngIf="carCreateForm.controls.fuelType.hasError('required')">Sie müssen etwas eingeben</mat-error>
+          <mat-error *ngIf="rideCreateForm.controls.car.hasError('required')">Sie müssen etwas eingeben</mat-error>
         </mat-form-field>
         <button mat-raised-button color="primary" [disabled]="!rideCreateForm.valid" (click)="openRideCreateDialog()">Fahrt buchen</button>
       </form>
