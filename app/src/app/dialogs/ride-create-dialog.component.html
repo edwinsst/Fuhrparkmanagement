@@ -26,11 +26,13 @@
             <mat-label>Startzeit</mat-label>
             <input matInput formControlName="startTime" type="time">
             <mat-error *ngIf="rideCreateStep1Form.controls.startTime.hasError('required')">Sie müssen etwas eingeben</mat-error>
+            <mat-error *ngIf="rideCreateStep1Form.controls.startTime.hasError('endBeforeStart')">Sie müssen die Zeiten ändern</mat-error>
           </mat-form-field>
           <mat-form-field>
             <mat-label>Endzeit</mat-label>
             <input matInput formControlName="endTime" type="time">
             <mat-error *ngIf="rideCreateStep1Form.controls.endTime.hasError('required')">Sie müssen etwas eingeben</mat-error>
+            <mat-error *ngIf="rideCreateStep1Form.controls.endTime.hasError('endBeforeStart')">Sie müssen die Zeiten ändern</mat-error>
           </mat-form-field>
         </div>
         <div>
@@ -52,32 +54,87 @@
           </mat-form-field>
         </div>
         <div>
-          <button mat-button matStepperNext>Weiter</button>
+          <button mat-button matStepperNext (click)="updateAvailableCars()">Weiter</button>
         </div>
       </form>
     </mat-step>
     <mat-step label="Auto auswählen">
       <form [formGroup]="rideCreateStep2Form">
         <div>
-
+          <mat-selection-list #carSelection (selectionChange)="this.selectedCar = carSelection.selectedOptions.selected[0].value" [multiple]="false">
+            <mat-list-option *ngFor="let car of (availableCars | async)" [value]="car">
+              <span matListItemTitle>{{ car.modelName }}</span>
+              <span matListItemLine>Nummernschild: {{ car.licensePlate }}</span>
+              <span matListItemLine>Sitzplätze: {{ car.seats }}</span>
+              <span matListItemLine>Kraftstoffart: {{ car.fuelType }}</span>
+              <span matListItemLine>Reichweite: {{ car.range }}km</span>
+            </mat-list-option>
+            <!-- <mat-list-option>
+              <span matListItemTitle>BMW 118i</span>
+              <mat-grid-list cols="2" rowHeight="2:1">
+                <mat-grid-tile><span matListItemLine>Nummernschild: S-DS-123</span></mat-grid-tile>
+                <mat-grid-tile><span matListItemLine>Sitzplätze: 5</span></mat-grid-tile>
+                <mat-grid-tile><span matListItemLine>Kraftstoffart: Benzin</span></mat-grid-tile>
+                <mat-grid-tile><span matListItemLine>Reichweite: 400km</span></mat-grid-tile>
+              </mat-grid-list> -->
+          </mat-selection-list>
+        </div>
+        <div>
+          <mat-form-field style="width: 100%;">
+            <mat-label>Passagiere / Mitfahrer</mat-label>
+            <mat-chip-grid #chipGrid aria-label="Passenger selection">
+              <mat-chip-row *ngFor="let passenger of passengers" (removed)="removePassenger(passenger)">
+              {{ passenger }}
+              <button matChipRemove [attr.aria-label]="'remove ' + passenger">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip-row>
+            </mat-chip-grid>
+            <input placeholder="Passagier hinzufügen..." formControlName="passengers"
+                   [matChipInputFor]="chipGrid" [matAutocomplete]="autoPassenger"
+                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                   (matChipInputTokenEnd)="addPassenger($event)"/>
+            <mat-autocomplete #autoPassenger="matAutocomplete" (optionSelected)="selectedPassenger($event)">
+              <mat-option *ngFor="let passenger of (passengerOptions | async)" [value]="passenger">{{ passenger }}</mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
         </div>
         <div>
           <button mat-button matStepperPrevious>Zurück</button>
-          <button mat-button matStepperNext>Weiter</button>
+          <button mat-button matStepperNext [disabled]="!carSelection.selectedOptions.hasValue()">Weiter</button>
         </div>
       </form>
     </mat-step>
     <mat-step>
-      <ng-template matStepLabel>Done</ng-template>
-      <p>You are now done.</p>
+      <ng-template matStepLabel>Fahrt bestätigen</ng-template>
       <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button (click)="stepper.reset()">Reset</button>
+        <mat-card class="example-card">
+          <mat-card-header>
+            <mat-card-title>Fahrt: {{ rideCreateStep1Form.controls.purpose.getRawValue() }}</mat-card-title>
+            <mat-card-subtitle>
+             vom {{ formatDateTime(rideCreateStep1Form.controls.startDate.getRawValue(),
+                                    rideCreateStep1Form.controls.startTime.getRawValue()) }}
+              bis {{ formatDateTime(rideCreateStep1Form.controls.endDate.getRawValue(),
+                                    rideCreateStep1Form.controls.endTime.getRawValue()) }}
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Startadresse: {{ rideCreateStep1Form.controls.startingAddress.getRawValue() }}</p>
+            <p>Zieladresse: {{ rideCreateStep1Form.controls.destinationAddress.getRawValue() }}</p>
+            <p>Auto: {{ selectedCar?.modelName + ' (' + selectedCar?.licensePlate + ')' }}</p>
+            <p>Passagiere: {{ passengers.join(', ') }}</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div>
+        <button mat-button matStepperPrevious>Zurück</button>
+        <button mat-button (click)="stepper.reset()">Alle Daten zurücksetzen</button>
       </div>
     </mat-step>
   </mat-stepper>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button color="warn" mat-dialog-close>Abbrechen</button>
-  <button mat-raised-button color="primary" [disabled]="true" [mat-dialog-close]="true">Fortfahren</button>
+  <button mat-raised-button color="primary" [disabled]="!rideCreateStep1Form.valid || selectedCar == null"
+          (click)="createRideWithReservations()" [mat-dialog-close]="true">Fahrt anlegen</button>
 </mat-dialog-actions>
