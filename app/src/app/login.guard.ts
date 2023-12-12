@@ -6,7 +6,7 @@ export const loginGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthenticationService);
   const router = inject(Router);
 
-  authService.loadLongTimeTokenFromLocalStorage();
+  authService.loadLongTimeTokenAndUserInfo();
   if (!authService.longTimeToken) {
     navigateToLogin(router);
     return false;

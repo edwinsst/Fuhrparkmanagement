@@ -24,7 +24,7 @@ export class LoginComponent {
   constructor(private authService: AuthenticationService, private router: Router) {}
 
   ngOnInit(): void {
-    this.authService.loadLongTimeTokenFromLocalStorage();
+    this.authService.loadLongTimeTokenAndUserInfo();
     if (!this.authService.longTimeToken) {
       return;
     }
@@ -39,7 +39,7 @@ export class LoginComponent {
     this.authService.authenticate(username, password)
       .subscribe({
         next: () => {
-          this.authService.saveLongTimeToken();
+          this.authService.saveLongTimeTokenAndUserInfo();
           this.authService.generateShortTimeToken()
             .subscribe(() => this.router.navigate([ '/home' ]));
         },
