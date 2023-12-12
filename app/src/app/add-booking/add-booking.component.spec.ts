@@ -22,6 +22,3 @@ describe('AddBookingComponent', () => {
     expect(component).toBeTruthy();
   });
 });
-
-
-

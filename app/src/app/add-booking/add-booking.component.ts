@@ -44,22 +44,11 @@ export class AddBookingComponent {
   @ViewChild('dateRangePicker')
   dateRangePicker:  MatDateRangeInput<any>
 
-  displayedCarColumns: string[] = ['id', 'licensePlate', 'modelName', 'fuelType', 'location', 'seats',
-    'range', 'available'];
   loadedCars: Car[] = [];
 
   displayedRideColumns: string[] = ['id', 'purpose', 'startAddress', 'destinationAddress', 'startDate', 'endDate',
     'carId'];
   loadedRides: Ride[] = [];
-
-  carCreateForm = new FormGroup({
-    licensePlate: new FormControl('', [Validators.required]),
-    modelName: new FormControl('', [Validators.required]),
-    fuelType: new FormControl('', [Validators.required]),
-    location: new FormControl('', [Validators.required]),
-    seats: new FormControl('', [Validators.required, Validators.min(1)]),
-    range: new FormControl('', [Validators.required, Validators.min(1)]),
-  });
 
   rideCreateForm = new FormGroup({
     purpose: new FormControl('', [Validators.required]),
@@ -72,7 +61,6 @@ export class AddBookingComponent {
     car: new FormControl('', [Validators.required]),
   });
 
-
   constructor(private carService: CarsService, private rideService: RidesService,
               private reservationService: ReservationsService, public dialog: MatDialog) {}
 
@@ -83,11 +71,6 @@ export class AddBookingComponent {
 
   loadCars(): void {
     this.carService.listAll().subscribe({ next: cars => this.loadedCars = cars });
-  }
-
-  createCar(car: Car): void {
-    this.carService.create({ body: car })
-      .subscribe({ next: car => this.loadedCars = [ ...this.loadedCars, car ] });
   }
 
   loadRides(): void {
@@ -111,32 +94,6 @@ export class AddBookingComponent {
   createReservation(reservation: Reservation) {
     this.reservationService.create_2({ body: reservation })
       .subscribe(reservation => console.log(reservation));
-  }
-
-  openCarCreateDialog(): void {
-    const dialogRef = this.dialog.open(ConfirmCarCreateDialog);
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (!result) {
-        return;
-      }
-      const licensePlate = this.carCreateForm.controls.licensePlate.getRawValue() || '';
-      const modelName = this.carCreateForm.controls.modelName.getRawValue() || '';
-      const fuelType = this.carCreateForm.controls.fuelType.getRawValue() || '';
-      const location = this.carCreateForm.controls.location.getRawValue() || '';
-      const seats = parseInt(this.carCreateForm.controls.seats.getRawValue() || '');
-      const range = parseInt(this.carCreateForm.controls.range.getRawValue() || '');
-
-      const car: Car = {
-        licensePlate,
-        modelName,
-        fuelType,
-        location,
-        seats,
-        range
-      };
-      this.createCar(car);
-    });
   }
 
   getMonth(month: string): string {
@@ -215,15 +172,6 @@ export class AddBookingComponent {
     });
   }
 }
-
-
-@Component({
-  selector: 'confirm-car-create-dialog',
-  templateUrl: 'confirm-car-create-dialog.html',
-  standalone: true,
-  imports: [MatDialogModule, MatButtonModule],
-})
-export class ConfirmCarCreateDialog {}
 
 @Component({
   selector: 'confirm-ride-create-dialog',
