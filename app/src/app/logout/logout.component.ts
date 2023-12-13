@@ -10,7 +10,7 @@ import {MatButtonModule} from "@angular/material/button";
     ToolBarComponent
   ],
   templateUrl: './logout.component.html',
-  styleUrl: './logout.component.css'
+  styleUrls: ['./logout.component.css']
 })
 
 export class LogoutComponent {

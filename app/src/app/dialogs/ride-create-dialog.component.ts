@@ -36,7 +36,7 @@ const TIME_REGEX = /(?<hour>[0-9]{2}):(?<minute>[0-9]{2})/
 @Component({
   selector: 'ride-create-dialog',
   templateUrl: 'ride-create-dialog.component.html',
-  styleUrl: 'ride-create-dialog.component.css',
+  styleUrls: ['ride-create-dialog.component.css'],
   standalone: true,
   imports: [MatDialogModule, MatFormFieldModule, MatButtonModule, MatStepperModule, ReactiveFormsModule, MatInputModule, NgIf, MatDatepickerModule, MatAutocompleteModule, NgForOf, AsyncPipe, MatListModule, MatGridListModule, MatChipsModule, MatIconModule, MatCardModule],
 })

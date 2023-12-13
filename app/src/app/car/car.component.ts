@@ -33,7 +33,7 @@ import {Ride} from "../api/models/ride";
         ToolBarComponent
     ],
   templateUrl: './car.component.html',
-  styleUrl: './car.component.css'
+  styleUrls: ['./car.component.css']
 })
 export class CarComponent {
   @ViewChild('dateRangePicker')
