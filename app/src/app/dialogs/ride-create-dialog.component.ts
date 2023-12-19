@@ -124,8 +124,8 @@ export class RideCreateDialogComponent {
 
     const ride: Ride = {
       carId: this.selectedCar!.id!,
-      startDate: this.formatDate(startDate, this.rideCreateStep1Form.controls.startTime.getRawValue()!),
-      endDate: this.formatDate(endDate, this.rideCreateStep1Form.controls.startTime.getRawValue()!),
+      startDate: this.formatDateTimeISO8601(startDate, this.rideCreateStep1Form.controls.startTime.getRawValue()!),
+      endDate: this.formatDateTimeISO8601(endDate, this.rideCreateStep1Form.controls.startTime.getRawValue()!),
       startAddress: this.rideCreateStep1Form.controls.startingAddress.getRawValue()!,
       destinationAddress: this.rideCreateStep1Form.controls.startingAddress.getRawValue()!,
       purpose: this.rideCreateStep1Form.controls.purpose.getRawValue()!
@@ -214,8 +214,11 @@ export class RideCreateDialogComponent {
     return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()} (${timeStr} Uhr)`;
   }
 
-  formatDate(date: Date, timeStr: string): string {
-    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}T${timeStr}:00.000Z`;
+  formatDateTimeISO8601(date: Date, timeStr: string): string {
+    const year = date.getFullYear().toString().padStart(4, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDay().toString().padStart(2, '0');
+    return `${year}-${month}-${day}T${timeStr}:00.000Z`;
   }
 
   dateTimeValidator(): ValidatorFn {
