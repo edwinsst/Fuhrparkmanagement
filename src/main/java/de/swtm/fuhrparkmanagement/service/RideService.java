@@ -33,13 +33,7 @@ public class RideService {
     }
 
     public List<RideDto> listAll() {
-        List<RideDto> response = new ArrayList<>();
-        for (Ride ride : rideRepository.findAll()) {
-            if (ride.getDeletedDate() == null) {
-                response.add(convertToDto(ride));
-            }
-        }
-        return response;
+        return getNonDeletedRides().stream().map(this::convertToDto).toList();
     }
 
     public RideDto findById(long id) {
@@ -47,7 +41,7 @@ public class RideService {
     }
 
     public RideDto updateById(long id, RideDto rideDto) {
-        checkRideValidations(rideDto);
+        checkRideValidations(rideDto, id);
         checkIfRideWithIdExists(id);
         Ride ride = convertToEntity(rideDto);
         ride.setId(id);
@@ -73,8 +67,17 @@ public class RideService {
         }
     }
 
+    private void checkRideValidations(RideDto rideDto, long id) {
+        if (rideDto.getEndDate().isBefore(rideDto.getStartDate())) {
+            throw new IllegalRideException();
+        }
+        if (isRideConflictingWithOthers(rideDto, id)) {
+            throw new IllegalRideException();
+        }
+    }
+
     private boolean isRideConflictingWithOthers(RideDto rideDto) {
-        for (Ride ride : rideRepository.findAll()) {
+        for (Ride ride : getNonDeletedRides()) {
             if (!Objects.equals(ride.getCar().getId(), rideDto.getCarId())) {
                 continue;
             }
@@ -84,6 +87,32 @@ public class RideService {
             }
         }
         return false;
+    }
+
+    private boolean isRideConflictingWithOthers(RideDto rideDto, long ignoringId) {
+        for (Ride ride : getNonDeletedRides()) {
+            if (ride.getId() == ignoringId) {
+                continue;
+            }
+            if (!Objects.equals(ride.getCar().getId(), rideDto.getCarId())) {
+                continue;
+            }
+            if (areDatesOverlapping(rideDto.getStartDate(), rideDto.getEndDate(),
+                    ride.getStartDate(), ride.getEndDate())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private List<Ride> getNonDeletedRides() {
+        List<Ride> result = new ArrayList<>();
+        for (Ride ride : rideRepository.findAll()) {
+            if (ride.getDeletedDate() == null) {
+                result.add(ride);
+            }
+        }
+        return result;
     }
 
     private boolean areDatesOverlapping(OffsetDateTime startDate1, OffsetDateTime endDate1,

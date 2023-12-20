@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {MatDialogModule} from "@angular/material/dialog";
+import {MatDialogModule, MatDialogRef} from "@angular/material/dialog";
 import {MatButtonModule} from "@angular/material/button";
 import {MatStepperModule} from "@angular/material/stepper";
 import {
@@ -30,8 +30,10 @@ import {AuthenticationService, UserInfo} from "../authentication.service";
 import {startOfDay} from "date-fns";
 import {RidesService} from "../api/services/rides.service";
 import {Ride} from "../api/models/ride";
-
-const TIME_REGEX = /(?<hour>[0-9]{2}):(?<minute>[0-9]{2})/
+import {ReservationsService} from "../api/services/reservations.service";
+import {Reservation} from "../api/models/reservation";
+import {formatDateTimeISO8601, formatDateTime, parseTime} from "../date-time-utils";
+import {filterAvailableCars} from "../validation-utils";
 
 @Component({
   selector: 'ride-create-dialog',
@@ -41,7 +43,8 @@ const TIME_REGEX = /(?<hour>[0-9]{2}):(?<minute>[0-9]{2})/
   imports: [MatDialogModule, MatFormFieldModule, MatButtonModule, MatStepperModule, ReactiveFormsModule, MatInputModule, NgIf, MatDatepickerModule, MatAutocompleteModule, NgForOf, AsyncPipe, MatListModule, MatGridListModule, MatChipsModule, MatIconModule, MatCardModule],
 })
 export class RideCreateDialogComponent {
-  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  protected readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  protected readonly formatDateTime = formatDateTime;
 
   rideCreateStep1Form = new FormGroup({
     purpose: new FormControl('', [Validators.required]),
@@ -64,13 +67,16 @@ export class RideCreateDialogComponent {
 
   passengers: string[] = [];
   allPassengers: string[] = [];
+  passengerInfos: UserInfo[] = [];
   passengerOptions: Observable<string[]>;
 
   availableCars: Observable<Car[]>
   selectedCar: Car | null
   cars: Car[] = []
 
-  constructor(private carService: CarsService, private rideService: RidesService, private authService: AuthenticationService) {
+  constructor(private dialogRef: MatDialogRef<RideCreateDialogComponent>, private carService: CarsService,
+              private rideService: RidesService, private reservationService: ReservationsService,
+              private authService: AuthenticationService) {
   }
 
   ngOnInit(): void {
@@ -86,48 +92,41 @@ export class RideCreateDialogComponent {
     this.carService.listAll().subscribe({ next: cars => this.cars = cars });
   }
 
-  getAvailableCars(): Observable<Car[]> {
-    return this.rideService.listAll_1().pipe(map(rides => this.filterAvailableCars(rides)));
+  getStartDate(): Date {
+    return this.rideCreateStep1Form.controls.startDate.getRawValue()!;
   }
 
-  filterAvailableCars(rides: Ride[]): Car[] {
-    let startDate = this.rideCreateStep1Form.controls.startDate.getRawValue()!;
-    let endDate = this.rideCreateStep1Form.controls.endDate.getRawValue()!;
-    const startTime = this.parseTime(this.rideCreateStep1Form.controls.startTime.getRawValue());
-    const endTime = this.parseTime(this.rideCreateStep1Form.controls.startTime.getRawValue());
+  getEndDate(): Date {
+    return this.rideCreateStep1Form.controls.endDate.getRawValue()!;
+  }
 
-    startDate = this.getDateWithTime(startDate, startTime);
-    endDate = this.getDateWithTime(endDate, endTime);
+  getStartTime(): string {
+    return this.rideCreateStep1Form.controls.startTime.getRawValue()!;
+  }
 
-    return this.cars.filter(car => {
-      for (const ride of rides) {
-        if (ride.carId !== car.id) {
-          continue;
-        }
-        const rideStartDate = new Date(ride.startDate);
-        const rideEndDate = new Date(ride.endDate);
-        if (startDate.getTime() < rideEndDate.getTime() && rideStartDate.getTime() < endDate.getTime()) {
-          return false;
-        }
-      }
-      return true;
-    });
+  getEndTime(): string {
+    return this.rideCreateStep1Form.controls.endTime.getRawValue()!;
+  }
+
+  getAvailableCars(): Observable<Car[]> {
+    return this.rideService.listAll_1().pipe(map(rides => filterAvailableCars(this.cars, rides,
+      this.getStartDate(), this.getEndDate(), this.getStartTime(), this.getEndTime())));
   }
 
   loadUsers(): void {
-    this.authService.getUsers().subscribe({ next: userInfos => this.fillPassangerArrays(userInfos) });
+    this.authService.getUsers().subscribe({ next: userInfos => {
+        this.fillPassangerArrays(userInfos);
+        this.passengerInfos = userInfos;
+      }});
   }
 
   createRideWithReservations(): void {
-    const startDate = this.rideCreateStep1Form.controls.startDate.getRawValue()!;
-    const endDate = this.rideCreateStep1Form.controls.endDate.getRawValue()!;
-
     const ride: Ride = {
       carId: this.selectedCar!.id!,
-      startDate: this.formatDateTimeISO8601(startDate, this.rideCreateStep1Form.controls.startTime.getRawValue()!),
-      endDate: this.formatDateTimeISO8601(endDate, this.rideCreateStep1Form.controls.startTime.getRawValue()!),
+      startDate: formatDateTimeISO8601(this.getStartDate(), this.getStartTime()),
+      endDate: formatDateTimeISO8601(this.getEndDate(), this.getEndTime()),
       startAddress: this.rideCreateStep1Form.controls.startingAddress.getRawValue()!,
-      destinationAddress: this.rideCreateStep1Form.controls.startingAddress.getRawValue()!,
+      destinationAddress: this.rideCreateStep1Form.controls.destinationAddress.getRawValue()!,
       purpose: this.rideCreateStep1Form.controls.purpose.getRawValue()!
     }
 
@@ -135,7 +134,20 @@ export class RideCreateDialogComponent {
   }
 
   createReservations(ride: Ride): void {
-    // TODO
+    if (!ride.id) {
+      return;
+    }
+    for (const passengerInfo of this.passengerInfos) {
+      if (!this.passengers.includes(this.getFullName(passengerInfo))) {
+        continue;
+      }
+      const reservation: Reservation = {
+        userId: passengerInfo.id.toString(),
+        rideId: ride.id!
+      }
+      this.reservationService.create_2({ body: reservation }).subscribe();
+    }
+    this.dialogRef.close(true);
   }
 
   fillPassangerArrays(userInfos: UserInfo[]): void {
@@ -187,40 +199,6 @@ export class RideCreateDialogComponent {
     this.rideCreateStep2Form.controls.passengers.setValue(null);
   }
 
-  parseTime(time: string | null): [number, number] {
-    if (!time) {
-      return [99, 99];
-    }
-    const timeRegexMatch = String(time).match(TIME_REGEX);
-    if (timeRegexMatch?.groups) {
-      const hour = parseInt(timeRegexMatch.groups['hour']);
-      const minute = parseInt(timeRegexMatch.groups['minute']);
-      return [hour, minute];
-    }
-    return [99, 99];
-  }
-
-  getDateWithTime(date: Date, time: [number, number]): Date {
-    date = new Date(date.getTime());
-    date.setHours(time[0]);
-    date.setMinutes(time[1]);
-    return date;
-  }
-
-  formatDateTime(date: Date | null, timeStr: string | null): string {
-    if (!date || !timeStr) {
-      return '';
-    }
-    return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()} (${timeStr} Uhr)`;
-  }
-
-  formatDateTimeISO8601(date: Date, timeStr: string): string {
-    const year = date.getFullYear().toString().padStart(4, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDay().toString().padStart(2, '0');
-    return `${year}-${month}-${day}T${timeStr}:00.000Z`;
-  }
-
   dateTimeValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const startDate = this.rideCreateStep1Form?.controls.startDate.getRawValue();
@@ -232,8 +210,8 @@ export class RideCreateDialogComponent {
         return null;
       }
 
-      const startTime = this.parseTime(startTimeControl.getRawValue());
-      const endTime = this.parseTime(endTimeControl.getRawValue());
+      const startTime = parseTime(startTimeControl.getRawValue());
+      const endTime = parseTime(endTimeControl.getRawValue());
 
       const isEndTimeBeforeStartTime = startTime[0] > endTime[0]
         || (startTime[0] === endTime[0] && startTime[1] > endTime[1]);
