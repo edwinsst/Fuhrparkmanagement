@@ -112,10 +112,8 @@
           <mat-card-header>
             <mat-card-title>Fahrt: {{ rideCreateStep1Form.controls.purpose.getRawValue() }}</mat-card-title>
             <mat-card-subtitle>
-             vom {{ formatDateTime(rideCreateStep1Form.controls.startDate.getRawValue(),
-                                    rideCreateStep1Form.controls.startTime.getRawValue()) }}
-              bis {{ formatDateTime(rideCreateStep1Form.controls.endDate.getRawValue(),
-                                    rideCreateStep1Form.controls.endTime.getRawValue()) }}
+             vom {{ formatDateTime(this.getStartDate(), this.getStartTime()) }}
+              bis {{ formatDateTime(this.getEndDate(), this.getEndTime()) }}
             </mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
@@ -136,5 +134,5 @@
 <mat-dialog-actions align="end">
   <button mat-button color="warn" mat-dialog-close>Abbrechen</button>
   <button mat-raised-button color="primary" [disabled]="!rideCreateStep1Form.valid || selectedCar == null"
-          (click)="createRideWithReservations()" [mat-dialog-close]="true">Fahrt anlegen</button>
+          (click)="createRideWithReservations()">Fahrt anlegen</button>
 </mat-dialog-actions>
