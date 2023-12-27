@@ -65,7 +65,7 @@
       <mat-form-field style="width: 100%;">
         <mat-label>Passagiere / Mitfahrer</mat-label>
         <mat-chip-grid #chipGrid aria-label="Passenger selection">
-          <mat-chip-row *ngFor="let passenger of passengers" (removed)="removePassenger(passenger)">
+          <mat-chip-row *ngFor="let passenger of (findCurrentPassengers() | async)" (removed)="removePassenger(passenger)">
             {{ passenger }}
             <button matChipRemove [attr.aria-label]="'remove ' + passenger">
               <mat-icon>cancel</mat-icon>

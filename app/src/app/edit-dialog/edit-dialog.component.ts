@@ -17,7 +17,7 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatAutocompleteModule, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {forkJoin, Observable, of, startWith} from "rxjs";
-import {map} from "rxjs/operators";
+import {filter, map} from "rxjs/operators";
 import {MatChipInputEvent, MatChipsModule} from "@angular/material/chips";
 import {MatIconModule} from "@angular/material/icon";
 import {MatListModule} from "@angular/material/list";
@@ -98,7 +98,6 @@ export class EditDialogComponent {
     this.rideCreateForm.controls.endDate.setValue(startOfDay(endDateTime));
     this.rideCreateForm.controls.endTime.setValue(toTimeString(endDateTime));
 
-    // TODO: passengers
     this.selectedCar = this.cars.find(car => car.id === this.ride.carId) || null;
   }
 
@@ -144,11 +143,28 @@ export class EditDialogComponent {
       }});
   }
 
-  fillPassangerArrays(userInfos: UserInfo[]): void {
-    const currentUserInfo = this.authService.userInfo;
-    if (currentUserInfo) {
-      this.passengers = [ this.getFullName(currentUserInfo) ];
+  findCurrentPassengers(): Observable<string[]> {
+    if (this.passengers.length === 0) {
+      return this.reservationService.listAll_2().pipe(map(reservations => {
+        const foundPassengers: string[] = []
+        for (const reservation of reservations) {
+          if (reservation.rideId !== this.ride.id) {
+            continue;
+          }
+          for (const userInfo of this.passengerInfos) {
+            if (userInfo.id === parseInt(reservation.userId)) {
+              foundPassengers.push(this.getFullName(userInfo));
+            }
+          }
+        }
+        this.passengers = foundPassengers;
+        return foundPassengers;
+      }));
     }
+    return of(this.passengers);
+  }
+
+  fillPassangerArrays(userInfos: UserInfo[]): void {
     this.allPassengers = userInfos.map(userInfo => this.getFullName(userInfo));
   }
 
@@ -187,24 +203,7 @@ export class EditDialogComponent {
       return;
     }
     // TODO: reservations
-    /*for (const passengerInfo of this.passengerInfos) {
-      if (!this.passengers.includes(this.getFullName(passengerInfo))) {
-        continue;
-      }
-      const reservation: Reservation = {
-        userId: passengerInfo.id.toString(),
-        rideId: ride.id!
-      }
 
-      this.reservationService.listAll_2().subscribe(reservations => {
-        for (const existingReservation of reservations) {
-          if (existingReservation.rideId === reservation.rideId && existingReservation.userId === reservation.userId) {
-            continue;
-          }
-          this.reservationService.create_2({ body: reservation }).subscribe();
-        }
-      });
-    }*/
     this.dialogRef.close(true);
   }
 
