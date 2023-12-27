@@ -15,7 +15,10 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 @Component
 public class EmailService {
+
     private final JavaMailSender emailSender;
+
+    private final ICSService icsService;
 
     public void sendSimpleMessage(
             String to, String subject, String text) {

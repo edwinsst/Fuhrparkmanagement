@@ -7,6 +7,7 @@ import de.swtm.fuhrparkmanagement.model.Ride;
 import de.swtm.fuhrparkmanagement.model.RideReservation;
 import de.swtm.fuhrparkmanagement.repository.RideRepository;
 import de.swtm.fuhrparkmanagement.repository.RideReservationRepository;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
