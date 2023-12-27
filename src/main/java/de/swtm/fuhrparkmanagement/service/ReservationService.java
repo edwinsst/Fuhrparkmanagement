@@ -30,7 +30,11 @@ public class ReservationService {
     public ReservationDto create(ReservationDto reservationDto) {
         checkReservationValidations(reservationDto);
         RideReservation rideReservation = convertToEntity(reservationDto);
-        emailService.sendSimpleMessage("a@b.c", "b", "c");
+        try {
+            emailService.sendNewReservationEmail(rideReservation);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
         return convertToDto(rideReservationRepository.save(rideReservation));
     }
 
