@@ -19,10 +19,11 @@ import {
 import {MatDialog} from "@angular/material/dialog";
 import {CommonModule} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
-import {ConfirmCarCreateDialog} from "../car/car.component";
 import {RideCreateDialogComponent} from "../dialogs/ride-create-dialog.component";
 import {RidesService} from "../api/services/rides.service";
 import {Ride} from "../api/models/ride";
+import {EditDialogComponent} from "../edit-dialog/edit-dialog.component";
+import {be} from "date-fns/locale";
 
 @Component({
   selector: 'app-calendar-big',
@@ -60,6 +61,7 @@ export class CalendarBigComponent {
 
   createEvents(rides: Ride[]): CalendarEvent[] {
     return rides.map(ride => ({
+        id: ride.id,
         start: new Date(ride.startDate),
         end: new Date(ride.endDate),
         title: ride.purpose,
@@ -72,7 +74,18 @@ export class CalendarBigComponent {
   }
 
   eventClicked(event: CalendarEvent) {
-    this.dialog.open(ConfirmCarCreateDialog);
+    if (!event.id) {
+      return;
+    }
+    this.rideService.find_1({ id: event.id as number }).subscribe(ride => {
+      const dialogRef = this.dialog.open(EditDialogComponent);
+      dialogRef.componentInstance.ride = ride;
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.loadRides();
+        }
+      });
+    });
   }
 
   dayClicked(date: Date) {
