@@ -25,9 +25,12 @@ public class ReservationService {
 
     private final RideRepository rideRepository;
 
+    private final EmailService emailService;
+
     public ReservationDto create(ReservationDto reservationDto) {
         checkReservationValidations(reservationDto);
         RideReservation rideReservation = convertToEntity(reservationDto);
+        emailService.sendSimpleMessage("a@b.c", "b", "c");
         return convertToDto(rideReservationRepository.save(rideReservation));
     }
 

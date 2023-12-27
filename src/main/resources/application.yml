@@ -3,6 +3,11 @@ spring:
     hibernate:
       ddl-auto: update
     generate-ddl: true
-
+  mail:
+    host: '127.0.0.1'
+    port: 1025
+    test-connection: true
+    username: 'admin'
+    password: 'secret'
 authentication:
   jwt-secret: 'hAdsJsFnV5TxvkuWKrD33sWWvEjGcYufQ9PB246Tmnu6NnFfTXhAdsJsFnV5TxvkuWKrD33sWWvEjGcYufQ9PB246Tmnu6NnFfTXhAdsJsFnV5TxvkuWKrD33sWWvEjGcYufQ9PB246Tm123123123'
