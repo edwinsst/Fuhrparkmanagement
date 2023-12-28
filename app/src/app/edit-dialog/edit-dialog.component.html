@@ -84,7 +84,6 @@
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button color="warn" mat-dialog-close>Abbrechen</button>
-  <button mat-raised-button color="warn" (click)="deleteRideWithReservation()">Löschen</button>
-  <button mat-raised-button color="primary" (click)="updateRideWithReservations()">Aktualisieren</button>
+  <button mat-button color="warn" [mat-dialog-close]="true" mat-dialog-close>Abbrechen</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="true" (click)="updateRideWithReservations()">Aktualisieren</button>
 </mat-dialog-actions>

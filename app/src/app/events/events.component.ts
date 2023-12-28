@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
-import {MatTableModule} from '@angular/material/table';
+import {MatTableModule, MatTableDataSource} from '@angular/material/table';
 import {MatButtonModule} from "@angular/material/button";
 import {MatDividerModule} from "@angular/material/divider";
 import {MatIconModule} from "@angular/material/icon";
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import {EditDialogComponent} from "../edit-dialog/edit-dialog.component";
+import {DeleteDialogComponent} from "../delete-dialog/delete-dialog.component";
+import {AfterViewInit, ViewChild} from '@angular/core';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 
 export interface PeriodicElement {
   name: string;
@@ -28,11 +31,17 @@ const ELEMENT_DATA: PeriodicElement[] = [
   templateUrl: './events.component.html',
   styleUrls: ['./events.component.css'],
   standalone: true,
-  imports: [MatTableModule, MatButtonModule, MatDividerModule, MatIconModule, MatButtonModule, MatDialogModule]
+  imports: [MatTableModule, MatButtonModule, MatDividerModule, MatIconModule, MatButtonModule, MatDialogModule, MatPaginatorModule, EditDialogComponent, DeleteDialogComponent]
 })
-export class EventsComponent {
+export class EventsComponent implements AfterViewInit {
   displayedColumns: string[] = ['position', 'name', 'car', 'licensePlate', 'time', 'actions'];
-  dataSource = ELEMENT_DATA;
+  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
 
   constructor(public dialog: MatDialog) {}
 
@@ -45,7 +54,7 @@ export class EventsComponent {
   }
 
   deleteBooking() {
-    const dialogRef = this.dialog.open(DialogDelete);
+    const dialogRef = this.dialog.open(DeleteDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
@@ -53,13 +62,6 @@ export class EventsComponent {
   }
 }
 
-@Component({
-  selector: 'dialog-edit',
-  templateUrl: 'dialog-edit.html',
-  standalone: true,
-  imports: [MatDialogModule, MatButtonModule],
-})
-export class DialogEdit {}
 
 @Component({
   selector: 'dialog-delete',
@@ -67,6 +69,7 @@ export class DialogEdit {}
   standalone: true,
   imports: [MatDialogModule, MatButtonModule],
 })
-export class DialogDelete {}
+export class DialogDelete {
+}
 
 
