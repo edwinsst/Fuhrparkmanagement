@@ -1,6 +1,12 @@
 <button mat-raised-button color="primary" (click)="openRideCreateDialog()">Fahrt anlegen</button>
 <button mat-raised-button color="primary" (click)="view = CalendarView.Month">Monat</button>
 <button mat-raised-button color="primary" (click)="view = CalendarView.Week">Woche</button>
+<button mat-fab class="previous-month-button" color="primary" (click)= previousMonth()>
+  <mat-icon>arrow_back</mat-icon>
+</button>
+<button mat-fab class="next-month-button" color="primary" (click)= nextMonth()>
+  <mat-icon>arrow_forward</mat-icon>
+</button>
 
 <div [ngSwitch]="view">
   <mwl-calendar-month-view
