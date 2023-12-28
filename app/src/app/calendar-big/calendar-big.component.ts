@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, NgModule} from '@angular/core';
 import {
   CalendarCommonModule,
   CalendarEvent,
@@ -23,7 +23,10 @@ import {RideCreateDialogComponent} from "../dialogs/ride-create-dialog.component
 import {RidesService} from "../api/services/rides.service";
 import {Ride} from "../api/models/ride";
 import {EditDialogComponent} from "../edit-dialog/edit-dialog.component";
+import * as moment from 'moment';
+import { MatIconModule } from '@angular/material/icon';
 import {be} from "date-fns/locale";
+import {MatTableModule} from "@angular/material/table";
 
 @Component({
   selector: 'app-calendar-big',
@@ -34,7 +37,9 @@ import {be} from "date-fns/locale";
     CalendarCommonModule,
     CommonModule,
     CalendarWeekModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule,
+    MatTableModule
   ],
   standalone: true
 })
@@ -106,5 +111,17 @@ export class CalendarBigComponent {
   }
 
   protected readonly CalendarView = CalendarView;
+
+  nextMonth(): void {
+    this.viewDate = moment(this.viewDate).add(1, 'months').toDate();
+  }
+
+  previousMonth(): void {
+    this.viewDate = moment(this.viewDate).subtract(1, 'months').toDate();
+  }
 }
+
+
+
+
 

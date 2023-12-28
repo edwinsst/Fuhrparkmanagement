@@ -1,5 +1,23 @@
 .event-style {
-    text-align: center;
-    height: 10px;
-    padding: 10px;
+  text-align: center;
+  height: 10px;
+  padding: 10px;
+}
+
+.next-month-button{
+  width: 3em;
+  height: 3em;
+}
+
+.previous-month-button{
+  width: 3em;
+  height: 3em;
+}
+
+.next-month-button:hover{
+
+}
+
+.previous-month-button:hover{
+
 }
