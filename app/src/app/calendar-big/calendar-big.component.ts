@@ -14,7 +14,7 @@ import {
   endOfMonth,
   isSameDay,
   isSameMonth,
-  addHours, startOfMonth,
+  addHours, startOfMonth, addMonths, subMonths,
 } from 'date-fns';
 import {MatDialog} from "@angular/material/dialog";
 import {CommonModule} from "@angular/common";
@@ -23,9 +23,7 @@ import {RideCreateDialogComponent} from "../dialogs/ride-create-dialog.component
 import {RidesService} from "../api/services/rides.service";
 import {Ride} from "../api/models/ride";
 import {EditDialogComponent} from "../edit-dialog/edit-dialog.component";
-import * as moment from 'moment';
 import { MatIconModule } from '@angular/material/icon';
-import {be} from "date-fns/locale";
 import {MatTableModule} from "@angular/material/table";
 
 @Component({
@@ -113,11 +111,11 @@ export class CalendarBigComponent {
   protected readonly CalendarView = CalendarView;
 
   nextMonth(): void {
-    this.viewDate = moment(this.viewDate).add(1, 'months').toDate();
+    this.viewDate = addMonths(this.viewDate, 1);
   }
 
   previousMonth(): void {
-    this.viewDate = moment(this.viewDate).subtract(1, 'months').toDate();
+    this.viewDate = subMonths(this.viewDate, 1);
   }
 }
 
