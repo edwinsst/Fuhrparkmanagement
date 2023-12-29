@@ -13,7 +13,7 @@
         <mat-label>Buchungszeitraum</mat-label>
         <mat-date-range-input #dateRangePicker [rangePicker]="picker">
           <input matStartDate formControlName="startDate" placeholder="Startdatum">
-          <input matEndDate formControlName="endDate" placeholder="Enddatum">
+          <input matEndDate formControlName="endDate" placeholder="Enddatum" (dateChange)="updateAvailableCars()">
         </mat-date-range-input>
         <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
@@ -21,13 +21,13 @@
       </mat-form-field>
       <mat-form-field>
         <mat-label>Startzeit</mat-label>
-        <input matInput formControlName="startTime" type="time">
+        <input matInput formControlName="startTime" type="time" (change)="updateAvailableCars()">
         <mat-error *ngIf="rideCreateForm.controls.startTime.hasError('required')">Sie müssen etwas eingeben</mat-error>
         <mat-error *ngIf="rideCreateForm.controls.startTime.hasError('endBeforeStart')">Sie müssen die Zeiten ändern</mat-error>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Endzeit</mat-label>
-        <input matInput formControlName="endTime" type="time">
+        <input matInput formControlName="endTime" type="time" (change)="updateAvailableCars()">
         <mat-error *ngIf="rideCreateForm.controls.endTime.hasError('required')">Sie müssen etwas eingeben</mat-error>
         <mat-error *ngIf="rideCreateForm.controls.endTime.hasError('endBeforeStart')">Sie müssen die Zeiten ändern</mat-error>
       </mat-form-field>
@@ -62,7 +62,7 @@
       </mat-selection-list>
     </div>
     <div>
-      <mat-form-field style="width: 100%;">
+      <mat-form-field style="width: 100%;" floatLabel="always">
         <mat-label>Passagiere / Mitfahrer</mat-label>
         <mat-chip-grid #chipGrid aria-label="Passenger selection">
           <mat-chip-row *ngFor="let passenger of (findCurrentPassengers() | async)" (removed)="removePassenger(passenger)">

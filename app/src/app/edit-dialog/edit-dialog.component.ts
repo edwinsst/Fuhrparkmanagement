@@ -44,6 +44,7 @@ export class EditDialogComponent {
   protected readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
   ride: Ride;
+  rides: Ride[] = [];
 
   rideCreateForm = new FormGroup({
     purpose: new FormControl('', [Validators.required]),
@@ -126,16 +127,29 @@ export class EditDialogComponent {
     return this.rideCreateForm.controls.endTime.getRawValue()!;
   }
 
+  getRides(): Observable<Ride[]> {
+    return !this.rides.length ? this.rideService.listAll_1() : of(this.rides);
+  }
+
   getAvailableCars(): Observable<Car[]> {
-    return this.rideService.listAll_1().pipe(map(rides => {
+    return this.getRides().pipe(map(rides => {
       let availableCars = filterAvailableCars(this.cars, rides, this.getStartDate(), this.getEndDate(),
         this.getStartTime(), this.getEndTime());
       const currentCar = this.cars.find(car => car.id === this.ride.carId);
-      if (currentCar) {
+      if (currentCar && !availableCars.includes(currentCar)) {
         availableCars = [ currentCar, ...availableCars ];
       }
       return availableCars;
     }));
+  }
+
+  updateAvailableCars(): void {
+    const startDate = this.rideCreateForm.controls.startDate.getRawValue();
+    const endDate = this.rideCreateForm.controls.endDate.getRawValue();
+    if (!startDate || !endDate) {
+      return;
+    }
+    this.availableCars = this.getAvailableCars();
   }
 
   loadUsers(): void {
