@@ -31,6 +31,7 @@ import {CarsService} from "../api/services/cars.service";
 import {RidesService} from "../api/services/rides.service";
 import {ReservationsService} from "../api/services/reservations.service";
 import {Ride} from "../api/models/ride";
+import {Reservation} from "../api/models/reservation";
 
 @Component({
   selector: 'edit-dialog',
@@ -59,10 +60,11 @@ export class EditDialogComponent {
   destinationAddressOptions: Observable<string[]>;
   addressOptions = [ 'Stuttgart Feuerbach', 'Karlsruhe', 'Friedrichshafen' ];
 
-  passengers: string[] = [];
+  passengers: UserInfo[] = [];
   allPassengers: string[] = [];
   passengerInfos: UserInfo[] = [];
   passengerOptions: Observable<string[]>;
+  loadedCurrentPassengers = false;
 
   availableCars: Observable<Car[]>
   selectedCar: Car | null
@@ -144,24 +146,25 @@ export class EditDialogComponent {
   }
 
   findCurrentPassengers(): Observable<string[]> {
-    if (this.passengers.length === 0) {
+    if (!this.loadedCurrentPassengers) {
       return this.reservationService.listAll_2().pipe(map(reservations => {
-        const foundPassengers: string[] = []
+        const foundPassengers: UserInfo[] = [];
         for (const reservation of reservations) {
           if (reservation.rideId !== this.ride.id) {
             continue;
           }
           for (const userInfo of this.passengerInfos) {
             if (userInfo.id === parseInt(reservation.userId)) {
-              foundPassengers.push(this.getFullName(userInfo));
+              foundPassengers.push(userInfo);
             }
           }
         }
+        this.loadedCurrentPassengers = true;
         this.passengers = foundPassengers;
-        return foundPassengers;
+        return foundPassengers.map(this.getFullName);
       }));
     }
-    return of(this.passengers);
+    return of(this.passengers.map(this.getFullName));
   }
 
   fillPassangerArrays(userInfos: UserInfo[]): void {
@@ -198,12 +201,52 @@ export class EditDialogComponent {
       .subscribe(ride => this.updateReservations(ride));
   }
 
+  createReservationsForNewPassengers(allReservations: Reservation[]): void {
+    for (const passenger of this.passengers) {
+      let reservationForPassengerFound = false;
+      for (const reservation of allReservations) {
+        if (reservation.rideId !== this.ride.id) {
+          continue;
+        }
+        if (parseInt(reservation.userId) === passenger.id) {
+          reservationForPassengerFound = true;
+          break;
+        }
+      }
+      if (!reservationForPassengerFound) {
+        this.reservationService.create_2({ body: { rideId: this.ride.id!, userId: passenger.id.toString() } })
+          .subscribe();
+      }
+    }
+  }
+
+  deleteReservationsForRemovedPassengers(allReservations: Reservation[]): void {
+    for (const reservation of allReservations) {
+      if (reservation.rideId !== this.ride.id) {
+        continue;
+      }
+      let foundPassenger = false;
+      const passengerId = parseInt(reservation.userId);
+      for (const passenger of this.passengers) {
+        if (passengerId === passenger.id) {
+          foundPassenger = true;
+          break;
+        }
+      }
+      if (!foundPassenger) {
+        this.reservationService.delete_2({ id: reservation.id! }).subscribe();
+      }
+    }
+  }
+
   updateReservations(ride: Ride): void {
     if (!ride.id) {
       return;
     }
-    // TODO: reservations
-
+    this.reservationService.listAll_2().subscribe(reservations => {
+      this.createReservationsForNewPassengers(reservations);
+      this.deleteReservationsForRemovedPassengers(reservations);
+    });
     this.dialogRef.close(true);
   }
 
@@ -218,33 +261,44 @@ export class EditDialogComponent {
 
   applyPassengerFilter(formControl: FormControl<string | null>): Observable<string[]> {
     return formControl.valueChanges.pipe(startWith(null), map((passenger: string | null) =>
-      (passenger ? this.passengerFilter(passenger) : this.allPassengers.filter(passenger => !this.passengers.includes(passenger)))));
+      (passenger ? this.passengerFilter(passenger)
+                 : this.allPassengers.filter(passenger => !this.passengers.map(this.getFullName).includes(passenger)))));
   }
 
   passengerFilter(value: string): string[] {
     const filterValue = value.toLowerCase();
-    return this.allPassengers.filter(passenger => !this.passengers.includes(passenger)
+    return this.allPassengers.filter(passenger => !this.passengers.map(this.getFullName).includes(passenger)
       && passenger.toLowerCase().includes(filterValue));
   }
 
   addPassenger(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
     if (value && this.allPassengers.includes(value)) {
-      this.passengers.push(value);
+      const passengerInfo = this.passengerInfos
+        .find(info => this.getFullName(info) === value);
+      if (!passengerInfo) {
+        return;
+      }
+      this.passengers.push(passengerInfo);
     }
     event.chipInput!.clear();
     this.rideCreateForm.controls.passengers.setValue(null);
   }
 
   removePassenger(passenger: string) {
-    const index = this.passengers.indexOf(passenger);
+    const index = this.passengers.map(this.getFullName).indexOf(passenger);
     if (index >= 0) {
       this.passengers.splice(index, 1);
     }
   }
 
   selectedPassenger(event: MatAutocompleteSelectedEvent) {
-    this.passengers.push(event.option.viewValue);
+    const passengerInfo = this.passengerInfos
+      .find(info => this.getFullName(info) === event.option.viewValue);
+    if (!passengerInfo) {
+      return;
+    }
+    this.passengers.push(passengerInfo);
     this.rideCreateForm.controls.passengers.setValue(null);
   }
 

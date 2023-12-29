@@ -81,6 +81,9 @@ public class ReservationService {
 
     private boolean hasUserAlreadyReservationForRide(String userId, long rideId) {
         for (RideReservation rideReservation : rideReservationRepository.findAll()) {
+            if (rideReservation.getDeletedDate() != null) {
+                continue;
+            }
             if (rideReservation.getUserId().equals(userId) && rideReservation.getRide().getId() == rideId) {
                 return true;
             }
