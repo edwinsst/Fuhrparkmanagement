@@ -30,7 +30,17 @@
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns" class="mat-header"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="mat-row"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+      class="mat-row"
+      [ngClass]="{
+        'first' : row.position == 1,
+        'second' : row.position == 2,
+        'third' : row.position == 3,
+        'odd' : row.position > 3 && row.position % 2 == 0,
+        'even' : row.position > 3 && row.position % 2 == 1}">
+
+  </tr>
+
 </table>
 
 <mat-paginator [pageSizeOptions]="[10, 25, 50]"

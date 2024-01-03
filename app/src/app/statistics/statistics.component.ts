@@ -3,6 +3,7 @@ import {ToolBarComponent} from "../tool-bar/tool-bar.component";
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {AfterViewInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import {NgClass} from "@angular/common";
 
 export interface PeriodicElement {
   name: string;
@@ -30,7 +31,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./statistics.component.css'],
   standalone: true,
   imports: [
-    ToolBarComponent, MatTableModule, MatPaginatorModule
+    ToolBarComponent, MatTableModule, MatPaginatorModule, NgClass
   ],
 
 })

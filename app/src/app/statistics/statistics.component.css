@@ -8,12 +8,14 @@ table {
   background-color: cornflowerblue;
 }
 
-.mat-row:nth-child(even){
-  background-color: lightsteelblue;
+
+
+.odd {
+  background-color: white;
 }
 
-.mat-row:nth-child(odd){
-  background-color: white;
+.even {
+  background-color: lightsteelblue;
 }
 
 .mat-column-position {
@@ -21,4 +23,16 @@ table {
   border-right: 1px solid currentColor;
   padding-right: 24px;
   text-align: center;
+}
+
+.first {
+  background-color: gold;
+}
+
+.second {
+  background-color: silver;
+}
+
+.third {
+  background-color: saddlebrown;
 }
