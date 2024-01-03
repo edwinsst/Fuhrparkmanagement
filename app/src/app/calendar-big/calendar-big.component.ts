@@ -1,4 +1,4 @@
-import {Component, NgModule} from '@angular/core';
+import {Component} from '@angular/core';
 import {
   CalendarCommonModule,
   CalendarEvent,
@@ -6,16 +6,7 @@ import {
   CalendarView,
   CalendarWeekModule
 } from "angular-calendar";
-import {
-  startOfDay,
-  endOfDay,
-  subDays,
-  addDays,
-  endOfMonth,
-  isSameDay,
-  isSameMonth,
-  addHours, startOfMonth, addMonths, subMonths,
-} from 'date-fns';
+import {addMonths, addWeeks, subMonths, subWeeks,} from 'date-fns';
 import {MatDialog} from "@angular/material/dialog";
 import {CommonModule} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
@@ -23,7 +14,7 @@ import {RideCreateDialogComponent} from "../dialogs/ride-create-dialog.component
 import {RidesService} from "../api/services/rides.service";
 import {Ride} from "../api/models/ride";
 import {EditDialogComponent} from "../edit-dialog/edit-dialog.component";
-import { MatIconModule } from '@angular/material/icon';
+import {MatIconModule} from '@angular/material/icon';
 import {MatTableModule} from "@angular/material/table";
 
 @Component({
@@ -110,13 +101,22 @@ export class CalendarBigComponent {
 
   protected readonly CalendarView = CalendarView;
 
-  nextMonth(): void {
-    this.viewDate = addMonths(this.viewDate, 1);
+  nextMonthOrWeek(): void {
+    if(this.view === CalendarView.Month) {
+      this.viewDate = addMonths(this.viewDate, 1);
+    }else if(this.view === CalendarView.Week){
+      this.viewDate = addWeeks(this.viewDate, 1);
+    }
   }
 
-  previousMonth(): void {
-    this.viewDate = subMonths(this.viewDate, 1);
+  previousMonthOrWeek(): void {
+    if(this.view === CalendarView.Month) {
+      this.viewDate = subMonths(this.viewDate, 1);
+    }else if(this.view === CalendarView.Week){
+      this.viewDate = subWeeks(this.viewDate, 1);
+    }
   }
+
 }
 
 

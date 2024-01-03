@@ -1,10 +1,10 @@
 <button mat-raised-button color="primary" (click)="openRideCreateDialog()">Fahrt anlegen</button>
 <button mat-raised-button color="primary" (click)="view = CalendarView.Month">Monat</button>
 <button mat-raised-button color="primary" (click)="view = CalendarView.Week">Woche</button>
-<button mat-fab class="previous-month-button" color="primary" (click)= previousMonth()>
+<button mat-fab class="previous-month-button" color="primary" (click)= previousMonthOrWeek()>
   <mat-icon>arrow_back</mat-icon>
 </button>
-<button mat-fab class="next-month-button" color="primary" (click)= nextMonth()>
+<button mat-fab class="next-month-button" color="primary" (click)= nextMonthOrWeek()>
   <mat-icon>arrow_forward</mat-icon>
 </button>
 
