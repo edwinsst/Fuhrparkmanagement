@@ -33,7 +33,7 @@ public class ReservationService {
         RideReservation rideReservation = convertToEntity(reservationDto);
         try {
             emailService.sendNewReservationEmail(rideReservation);
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return convertToDto(rideReservationRepository.save(rideReservation));

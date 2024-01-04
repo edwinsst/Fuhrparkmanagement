@@ -11,3 +11,6 @@ spring:
     password: 'secret'
 authentication:
   jwt-secret: 'hAdsJsFnV5TxvkuWKrD33sWWvEjGcYufQ9PB246Tmnu6NnFfTXhAdsJsFnV5TxvkuWKrD33sWWvEjGcYufQ9PB246Tmnu6NnFfTXhAdsJsFnV5TxvkuWKrD33sWWvEjGcYufQ9PB246Tm123123123'
+user-management-api:
+  url: 'http://localhost:8082'
+  api-key: 'secret'

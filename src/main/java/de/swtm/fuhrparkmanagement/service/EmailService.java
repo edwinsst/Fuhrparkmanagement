@@ -20,6 +20,8 @@ public class EmailService {
 
     private final ICSService icsService;
 
+    private final UserService userService;
+
     public void sendSimpleMessage(
             String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
@@ -43,7 +45,7 @@ public class EmailService {
         emailSender.send(message);
     }
 
-    public void sendNewReservationEmail(RideReservation rideReservation) throws MessagingException {
+    public void sendNewReservationEmail(RideReservation rideReservation) throws Exception {
         String str = """
                 Von: %s
                 Bis: %s
@@ -53,6 +55,7 @@ public class EmailService {
                 rideReservation.getRide().getPurpose());
 
         String icsFileContent = icsService.generateEvent(rideReservation);
-        sendMimeMessage(rideReservation.getUserId() + "@firma.de", "Neue Resevierung", str, icsFileContent);
+        String recipientEmail = userService.getUserEmail(rideReservation.getUserId());
+        sendMimeMessage(recipientEmail, "Neue Resevierung", str, icsFileContent);
     }
 }
