@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 
 
-
+export const APP_NAME = 'slashDrive';
 
 @Component({
   selector: 'app-root',

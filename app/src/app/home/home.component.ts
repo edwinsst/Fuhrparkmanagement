@@ -3,6 +3,7 @@ import {ToolBarComponent} from "../tool-bar/tool-bar.component";
 import { CalendarBigComponent } from "../calendar-big/calendar-big.component";
 import {EventsComponent} from "../events/events.component";
 import {Title} from "@angular/platform-browser";
+import {APP_NAME} from "../app.component";
 
 @Component({
   selector: 'app-home',
@@ -21,6 +22,6 @@ export class HomeComponent {
     private titleService: Title
 
 ) {
-    titleService.setTitle("Kalender | Fuhparkmanagement ");
+    titleService.setTitle("Kalender | " + APP_NAME);
 }
 }

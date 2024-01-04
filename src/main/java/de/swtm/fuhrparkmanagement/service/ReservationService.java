@@ -67,6 +67,11 @@ public class ReservationService {
                 .orElseThrow(ReservationNotFoundException::new);
         rideReservation.setDeletedDate(OffsetDateTime.now());
         rideReservationRepository.save(rideReservation);
+        try {
+            emailService.sendDeleteReservationEmail(rideReservation);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void checkIfReservationWithIdExists(long id) {

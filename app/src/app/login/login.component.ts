@@ -6,6 +6,7 @@ import {ToolBarComponent} from "../tool-bar/tool-bar.component";
 import {AuthenticationService} from "../authentication.service";
 import {Router} from "@angular/router";
 import {Title} from "@angular/platform-browser";
+import {APP_NAME} from "../app.component";
 
 @Component({
   selector: 'app-login',
@@ -23,7 +24,7 @@ export class LoginComponent {
   });
 
   constructor(private authService: AuthenticationService, private router: Router, private titleService: Title) {
-    titleService.setTitle("Login | Fuhrparkmanagement");
+    titleService.setTitle("Login | " + APP_NAME);
   }
 
   ngOnInit(): void {

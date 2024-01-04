@@ -15,6 +15,7 @@ import {CarsService} from "../api/services/cars.service";
 import {MatDateRangeInput} from "@angular/material/datepicker";
 import {Ride} from "../api/models/ride";
 import {Title} from "@angular/platform-browser";
+import {APP_NAME} from "../app.component";
 
 @Component({
 
@@ -58,7 +59,7 @@ export class CarComponent {
   });
 
   constructor(private carService: CarsService, public dialog: MatDialog, private titleService: Title) {
-    titleService.setTitle("Autos | Fuhrparkmanagement")
+    titleService.setTitle("Autos | " + APP_NAME)
   }
 
   ngOnInit(): void {

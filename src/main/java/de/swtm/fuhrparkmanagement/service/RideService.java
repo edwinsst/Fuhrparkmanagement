@@ -5,8 +5,10 @@ import de.swtm.fuhrparkmanagement.exception.RideNotFoundException;
 import de.swtm.fuhrparkmanagement.model.Car;
 import de.swtm.fuhrparkmanagement.model.Ride;
 import de.swtm.fuhrparkmanagement.model.RideDto;
+import de.swtm.fuhrparkmanagement.model.RideReservation;
 import de.swtm.fuhrparkmanagement.repository.CarRepository;
 import de.swtm.fuhrparkmanagement.repository.RideRepository;
+import de.swtm.fuhrparkmanagement.repository.RideReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,10 @@ public class RideService {
     private final CarRepository carRepository;
 
     private final RideRepository rideRepository;
+
+    private final RideReservationRepository rideReservationRepository;
+
+    private final EmailService emailService;
 
     public RideDto create(RideDto rideDto) {
         checkRideValidations(rideDto);
@@ -45,6 +51,15 @@ public class RideService {
         checkIfRideWithIdExists(id);
         Ride ride = convertToEntity(rideDto);
         ride.setId(id);
+        for (RideReservation rideReservation : rideReservationRepository.findAll()) {
+            if (rideReservation.getDeletedDate() == null && rideReservation.getRide().getId() == id) {
+                try {
+                    emailService.sendUpdateReservationEmail(rideReservation);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         return convertToDto(rideRepository.save(ride));
     }
 

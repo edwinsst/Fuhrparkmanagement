@@ -1,6 +1,7 @@
 package de.swtm.fuhrparkmanagement;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,15 @@ import java.util.Properties;
 
 @SpringBootApplication
 public class FuhrparkmanagementSpringApplication {
+
+    @Value("${spring.mail.host}")
+    private String host;
+    @Value("${spring.mail.port}")
+    private int port;
+    @Value("${spring.mail.username}")
+    private String username;
+    @Value("${spring.mail.password}")
+    private String password;
 
     public static void main(String[] args) {
         SpringApplication.run(FuhrparkmanagementSpringApplication.class, args);
@@ -25,10 +35,10 @@ public class FuhrparkmanagementSpringApplication {
     @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("127.0.0.1");
-        mailSender.setPort(1025);
-        mailSender.setUsername("admin");
-        mailSender.setPassword("secret");
+        mailSender.setHost(host);
+        mailSender.setPort(port);
+        mailSender.setUsername(username);
+        mailSender.setPassword(password);
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");

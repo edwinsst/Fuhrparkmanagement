@@ -4,6 +4,7 @@ import de.swtm.fuhrparkmanagement.model.RideReservation;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -22,10 +23,13 @@ public class EmailService {
 
     private final UserService userService;
 
+    @Value("${spring.mail.from}")
+    private String emailFrom;
+
     public void sendSimpleMessage(
             String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("test@fuhrparkmanagement.com");
+        message.setFrom(emailFrom);
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
@@ -37,7 +41,7 @@ public class EmailService {
         MimeMessage message = emailSender.createMimeMessage();
         ByteArrayResource resource = new ByteArrayResource(icsFileContent.getBytes(StandardCharsets.UTF_8));
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setFrom("test@fuhrparkmanagement.com");
+        helper.setFrom(emailFrom);
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(text);
@@ -54,8 +58,35 @@ public class EmailService {
         str = String.format(str, rideReservation.getRide().getStartDate(), rideReservation.getRide().getEndDate(),
                 rideReservation.getRide().getPurpose());
 
-        String icsFileContent = icsService.generateEvent(rideReservation);
+        String icsFileContent = icsService.generateNewEvent(rideReservation);
         String recipientEmail = userService.getUserEmail(rideReservation.getUserId());
         sendMimeMessage(recipientEmail, "Neue Resevierung", str, icsFileContent);
+    }
+
+    public void sendUpdateReservationEmail(RideReservation rideReservation) throws Exception {
+        String str = """
+                Von: %s
+                Bis: %s
+                Purpose: %s
+                """;
+        str = String.format(str, rideReservation.getRide().getStartDate(), rideReservation.getRide().getEndDate(),
+                rideReservation.getRide().getPurpose());
+
+        String icsFileContent = icsService.generateUpdateEvent(rideReservation);
+        String recipientEmail = userService.getUserEmail(rideReservation.getUserId());
+        sendMimeMessage(recipientEmail, "Resevierung geaendert", str, icsFileContent);
+    }
+    public void sendDeleteReservationEmail(RideReservation rideReservation) throws Exception {
+        String str = """
+                Von: %s
+                Bis: %s
+                Purpose: %s
+                """;
+        str = String.format(str, rideReservation.getRide().getStartDate(), rideReservation.getRide().getEndDate(),
+                rideReservation.getRide().getPurpose());
+
+        String icsFileContent = icsService.generateDeleteEvent(rideReservation);
+        String recipientEmail = userService.getUserEmail(rideReservation.getUserId());
+        sendMimeMessage(recipientEmail, "Resevierung geloescht", str, icsFileContent);
     }
 }

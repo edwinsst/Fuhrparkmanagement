@@ -8,6 +8,7 @@ import {NgIf, NgOptimizedImage} from "@angular/common";
 import {Router, RouterLink} from "@angular/router";
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {AuthenticationService} from "../authentication.service";
+import {APP_NAME} from "../app.component";
 
 @Component({
   selector: 'app-tool-bar',
@@ -32,6 +33,8 @@ export class ToolBarComponent {
           }
       });
   }
+
+    protected readonly APP_NAME = APP_NAME;
 }
 
 @Component({

@@ -9,6 +9,7 @@ spring:
     test-connection: true
     username: 'admin'
     password: 'secret'
+    from: "test@fuhrparmanagement.com"
 authentication:
   jwt-secret: 'hAdsJsFnV5TxvkuWKrD33sWWvEjGcYufQ9PB246Tmnu6NnFfTXhAdsJsFnV5TxvkuWKrD33sWWvEjGcYufQ9PB246Tmnu6NnFfTXhAdsJsFnV5TxvkuWKrD33sWWvEjGcYufQ9PB246Tm123123123'
 user-management-api:

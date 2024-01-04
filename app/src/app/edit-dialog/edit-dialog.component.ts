@@ -32,6 +32,7 @@ import {RidesService} from "../api/services/rides.service";
 import {ReservationsService} from "../api/services/reservations.service";
 import {Ride} from "../api/models/ride";
 import {Reservation} from "../api/models/reservation";
+import {update_1} from "../api/fn/rides/update-1";
 
 @Component({
   selector: 'edit-dialog',
@@ -136,8 +137,7 @@ export class EditDialogComponent {
         this.getStartTime(), this.getEndTime(), this.passengers.length);
       const currentCar = this.cars.find(car => car.id === this.ride.carId);
       if (currentCar && !availableCars.includes(currentCar)) {
-        // availableCars = [ currentCar, ...availableCars ];
-        availableCars.push(currentCar);
+        availableCars = [ currentCar, ...availableCars ];
       }
       return availableCars;
     })).subscribe(availableCars => this.availableCars = availableCars);
@@ -211,8 +211,10 @@ export class EditDialogComponent {
       purpose: this.rideCreateForm.controls.purpose.getRawValue()!
     }
 
-    this.rideService.update_1({ id: this.ride.id!, body: ride })
-      .subscribe(ride => this.updateReservations(ride));
+
+    this.updateReservations(this.ride).subscribe(() => this.rideService.update_1(
+      { id: this.ride.id!, body: ride })
+      .subscribe(ride => this.dialogRef.close(true)));
   }
 
   createReservationsForNewPassengers(allReservations: Reservation[]): void {
@@ -253,15 +255,15 @@ export class EditDialogComponent {
     }
   }
 
-  updateReservations(ride: Ride): void {
+  updateReservations(ride: Ride): Observable<Reservation[]> {
     if (!ride.id) {
-      return;
+      return of();
     }
-    this.reservationService.listAll_2().subscribe(reservations => {
+    return this.reservationService.listAll_2().pipe(map(reservations => {
       this.createReservationsForNewPassengers(reservations);
       this.deleteReservationsForRemovedPassengers(reservations);
-    });
-    this.dialogRef.close(true);
+      return reservations;
+    }));
   }
 
   getFullName(userInfo: UserInfo): string {

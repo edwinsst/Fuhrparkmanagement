@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {ToolBarComponent} from "../tool-bar/tool-bar.component";
 import {MatTableModule} from '@angular/material/table';
 import {Title} from "@angular/platform-browser";
+import {APP_NAME} from "../app.component"
 
 export interface PeriodicElement {
   name: string;
@@ -43,6 +44,6 @@ export class StatisticsComponent {
     private titleService: Title
 
   ) {
-    titleService.setTitle("Statistik | Fuhrparkmanagement");
+    titleService.setTitle("Statistik | " + APP_NAME);
   }
 }
