@@ -15,6 +15,7 @@ import {CarsService, ReservationsService, RidesService} from "../api/services";
 import {Car} from "../api/models/car";
 import {Ride} from "../api/models/ride";
 import {Reservation} from "../api/models/reservation";
+import {Title} from "@angular/platform-browser";
 
 const DATE_REGEX = /(?<month>[A-Z][a-z]{2}) (?<day>[0-9]{2}) (?<year>[0-9]{4})/
 const TIME_REGEX = /(?<hour>[0-9]{2}):(?<minute>[0-9]{2})/
@@ -62,7 +63,9 @@ export class AddBookingComponent {
   });
 
   constructor(private carService: CarsService, private rideService: RidesService,
-              private reservationService: ReservationsService, public dialog: MatDialog) {}
+              private reservationService: ReservationsService, public dialog: MatDialog, private titleService: Title) {
+    titleService.setTitle("Neue Buchung | Fuhrparkmanagement")
+  }
 
   ngOnInit(): void {
     this.loadCars();

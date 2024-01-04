@@ -5,6 +5,7 @@ import {MaterialModule} from "../material/material.module";
 import {ToolBarComponent} from "../tool-bar/tool-bar.component";
 import {AuthenticationService} from "../authentication.service";
 import {Router} from "@angular/router";
+import {Title} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,9 @@ export class LoginComponent {
     password: new FormControl('', [ Validators.required ])
   });
 
-  constructor(private authService: AuthenticationService, private router: Router) {}
+  constructor(private authService: AuthenticationService, private router: Router, private titleService: Title) {
+    titleService.setTitle("Login | Fuhrparkmanagement");
+  }
 
   ngOnInit(): void {
     this.authService.loadLongTimeTokenAndUserInfo();

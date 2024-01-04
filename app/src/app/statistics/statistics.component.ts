@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {ToolBarComponent} from "../tool-bar/tool-bar.component";
 import {MatTableModule} from '@angular/material/table';
+import {Title} from "@angular/platform-browser";
 
 export interface PeriodicElement {
   name: string;
@@ -37,4 +38,11 @@ const ELEMENT_DATA: PeriodicElement[] = [
 export class StatisticsComponent {
   displayedColumns: string[] = ['position', 'name', 'kilometer', 'symbol'];
   dataSource = ELEMENT_DATA;
+
+  constructor(
+    private titleService: Title
+
+  ) {
+    titleService.setTitle("Statistik | Fuhrparkmanagement");
+  }
 }

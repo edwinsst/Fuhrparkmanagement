@@ -14,6 +14,7 @@ import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {CarsService} from "../api/services/cars.service";
 import {MatDateRangeInput} from "@angular/material/datepicker";
 import {Ride} from "../api/models/ride";
+import {Title} from "@angular/platform-browser";
 
 @Component({
 
@@ -56,7 +57,9 @@ export class CarComponent {
     range: new FormControl('', [Validators.required, Validators.min(1)]),
   });
 
-  constructor(private carService: CarsService, public dialog: MatDialog) {}
+  constructor(private carService: CarsService, public dialog: MatDialog, private titleService: Title) {
+    titleService.setTitle("Autos | Fuhrparkmanagement")
+  }
 
   ngOnInit(): void {
     this.loadCars();
