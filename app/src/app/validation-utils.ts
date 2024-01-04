@@ -5,7 +5,8 @@ import {AbstractControl, FormControl, ValidationErrors, ValidatorFn} from "@angu
 
 export function filterAvailableCars(cars: Car[], rides: Ride[],
                                     startDate: Date, endDate: Date,
-                                    startTimeStr: string, endTimeStr: string): Car[]
+                                    startTimeStr: string, endTimeStr: string,
+                                    passengersAmount: number): Car[]
 {
   const startTime = parseTime(startTimeStr);
   const endTime = parseTime(endTimeStr);
@@ -14,6 +15,9 @@ export function filterAvailableCars(cars: Car[], rides: Ride[],
   endDate = getDateWithTime(endDate, endTime);
 
   return cars.filter(car => {
+    if (car.seats < passengersAmount) {
+      return false;
+    }
     for (const ride of rides) {
       if (ride.carId !== car.id) {
         continue;

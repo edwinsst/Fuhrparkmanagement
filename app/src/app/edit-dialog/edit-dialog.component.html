@@ -52,7 +52,7 @@
     </div>
     <div>
       <mat-selection-list #carSelection (selectionChange)="this.selectedCar = carSelection.selectedOptions.selected[0].value" [multiple]="false">
-        <mat-list-option *ngFor="let car of (availableCars | async)" [value]="car" [selected]="selectedCar == car">
+        <mat-list-option *ngFor="let car of availableCars" [value]="car" [selected]="selectedCar == car">
           <span matListItemTitle>{{ car.modelName }}</span>
           <span matListItemLine>Nummernschild: {{ car.licensePlate }}</span>
           <span matListItemLine>Sitzplätze: {{ car.seats }}</span>

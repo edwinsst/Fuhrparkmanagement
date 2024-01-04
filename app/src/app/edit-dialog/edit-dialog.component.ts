@@ -67,7 +67,7 @@ export class EditDialogComponent {
   passengerOptions: Observable<string[]>;
   loadedCurrentPassengers = false;
 
-  availableCars: Observable<Car[]>
+  availableCars: Car[]
   selectedCar: Car | null
   cars: Car[] = []
 
@@ -84,8 +84,7 @@ export class EditDialogComponent {
     this.loadCars();
     this.loadUsers();
 
-    // TODO: update available cars when changing date or time
-    this.availableCars = this.getAvailableCars();
+    this.setAvailableCars();
   }
 
   fillFormFields(): void {
@@ -131,16 +130,17 @@ export class EditDialogComponent {
     return !this.rides.length ? this.rideService.listAll_1() : of(this.rides);
   }
 
-  getAvailableCars(): Observable<Car[]> {
-    return this.getRides().pipe(map(rides => {
+  setAvailableCars(): void {
+    this.getRides().pipe(map(rides => {
       let availableCars = filterAvailableCars(this.cars, rides, this.getStartDate(), this.getEndDate(),
-        this.getStartTime(), this.getEndTime());
+        this.getStartTime(), this.getEndTime(), this.passengers.length);
       const currentCar = this.cars.find(car => car.id === this.ride.carId);
       if (currentCar && !availableCars.includes(currentCar)) {
-        availableCars = [ currentCar, ...availableCars ];
+        // availableCars = [ currentCar, ...availableCars ];
+        availableCars.push(currentCar);
       }
       return availableCars;
-    }));
+    })).subscribe(availableCars => this.availableCars = availableCars);
   }
 
   updateAvailableCars(): void {
@@ -149,7 +149,7 @@ export class EditDialogComponent {
     if (!startDate || !endDate) {
       return;
     }
-    this.availableCars = this.getAvailableCars();
+    this.setAvailableCars();
   }
 
   loadUsers(): void {
@@ -286,14 +286,18 @@ export class EditDialogComponent {
   }
 
   addPassenger(event: MatChipInputEvent): void {
+    if (!this.selectedCar) {
+      return;
+    }
     const value = (event.value || '').trim();
-    if (value && this.allPassengers.includes(value)) {
+    if (value && this.allPassengers.includes(value) && this.passengers.length < this.selectedCar.seats) {
       const passengerInfo = this.passengerInfos
         .find(info => this.getFullName(info) === value);
       if (!passengerInfo) {
         return;
       }
       this.passengers.push(passengerInfo);
+      this.updateAvailableCars();
     }
     event.chipInput!.clear();
     this.rideCreateForm.controls.passengers.setValue(null);
@@ -303,16 +307,21 @@ export class EditDialogComponent {
     const index = this.passengers.map(this.getFullName).indexOf(passenger);
     if (index >= 0) {
       this.passengers.splice(index, 1);
+      this.updateAvailableCars();
     }
   }
 
   selectedPassenger(event: MatAutocompleteSelectedEvent) {
+    if (!this.selectedCar || this.passengers.length >= this.selectedCar.seats) {
+      return;
+    }
     const passengerInfo = this.passengerInfos
       .find(info => this.getFullName(info) === event.option.viewValue);
     if (!passengerInfo) {
       return;
     }
     this.passengers.push(passengerInfo);
+    this.updateAvailableCars();
     this.rideCreateForm.controls.passengers.setValue(null);
   }
 

@@ -70,7 +70,7 @@ export class RideCreateDialogComponent {
   passengerInfos: UserInfo[] = [];
   passengerOptions: Observable<string[]>;
 
-  availableCars: Observable<Car[]>
+  availableCars: Car[]
   selectedCar: Car | null
   cars: Car[] = []
 
@@ -108,9 +108,10 @@ export class RideCreateDialogComponent {
     return this.rideCreateStep1Form.controls.endTime.getRawValue()!;
   }
 
-  getAvailableCars(): Observable<Car[]> {
-    return this.rideService.listAll_1().pipe(map(rides => filterAvailableCars(this.cars, rides,
-      this.getStartDate(), this.getEndDate(), this.getStartTime(), this.getEndTime())));
+  setAvailableCars(): void {
+    this.rideService.listAll_1().pipe(map(rides => filterAvailableCars(this.cars, rides,
+      this.getStartDate(), this.getEndDate(), this.getStartTime(), this.getEndTime(), this.passengers.length)))
+      .subscribe(availableCars => this.availableCars = availableCars);
   }
 
   loadUsers(): void {
@@ -180,8 +181,10 @@ export class RideCreateDialogComponent {
 
   addPassenger(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
-    if (value && this.allPassengers.includes(value)) {
+    if (value && this.allPassengers.includes(value) && (this.selectedCar
+      && this.passengers.length < this.selectedCar.seats)) {
       this.passengers.push(value);
+      this.updateAvailableCars();
     }
     event.chipInput!.clear();
     this.rideCreateStep2Form.controls.passengers.setValue(null);
@@ -191,11 +194,16 @@ export class RideCreateDialogComponent {
     const index = this.passengers.indexOf(passenger);
     if (index >= 0) {
       this.passengers.splice(index, 1);
+      this.updateAvailableCars();
     }
   }
 
   selectedPassenger(event: MatAutocompleteSelectedEvent) {
+    if (this.selectedCar && this.passengers.length >= this.selectedCar.seats) {
+      return;
+    }
     this.passengers.push(event.option.viewValue);
+    this.updateAvailableCars();
     this.rideCreateStep2Form.controls.passengers.setValue(null);
   }
 
@@ -243,6 +251,6 @@ export class RideCreateDialogComponent {
     if (!this.rideCreateStep1Form.valid) {
       return;
     }
-    this.availableCars = this.getAvailableCars();
+    this.setAvailableCars();
   }
 }
