@@ -7,6 +7,7 @@ import de.swtm.fuhrparkmanagement.model.Ride;
 import de.swtm.fuhrparkmanagement.model.RideReservation;
 import de.swtm.fuhrparkmanagement.repository.RideRepository;
 import de.swtm.fuhrparkmanagement.repository.RideReservationRepository;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -25,15 +26,26 @@ public class ReservationService {
 
     private final RideRepository rideRepository;
 
+    private final EmailService emailService;
+
     public ReservationDto create(ReservationDto reservationDto) {
         checkReservationValidations(reservationDto);
         RideReservation rideReservation = convertToEntity(reservationDto);
+        try {
+            emailService.sendNewReservationEmail(rideReservation);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return convertToDto(rideReservationRepository.save(rideReservation));
     }
 
     public List<ReservationDto> listAll() {
         List<ReservationDto> response = new ArrayList<>();
-        rideReservationRepository.findAll().forEach(rideReservation -> response.add(convertToDto(rideReservation)));
+        for (RideReservation rideReservation : rideReservationRepository.findAll()) {
+            if (rideReservation.getDeletedDate() == null) {
+                response.add(convertToDto(rideReservation));
+            }
+        }
         return response;
     }
 
@@ -55,6 +67,11 @@ public class ReservationService {
                 .orElseThrow(ReservationNotFoundException::new);
         rideReservation.setDeletedDate(OffsetDateTime.now());
         rideReservationRepository.save(rideReservation);
+        try {
+            emailService.sendDeleteReservationEmail(rideReservation);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void checkIfReservationWithIdExists(long id) {
@@ -69,6 +86,9 @@ public class ReservationService {
 
     private boolean hasUserAlreadyReservationForRide(String userId, long rideId) {
         for (RideReservation rideReservation : rideReservationRepository.findAll()) {
+            if (rideReservation.getDeletedDate() != null) {
+                continue;
+            }
             if (rideReservation.getUserId().equals(userId) && rideReservation.getRide().getId() == rideId) {
                 return true;
             }

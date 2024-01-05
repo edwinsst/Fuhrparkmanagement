@@ -5,8 +5,10 @@ import de.swtm.fuhrparkmanagement.exception.RideNotFoundException;
 import de.swtm.fuhrparkmanagement.model.Car;
 import de.swtm.fuhrparkmanagement.model.Ride;
 import de.swtm.fuhrparkmanagement.model.RideDto;
+import de.swtm.fuhrparkmanagement.model.RideReservation;
 import de.swtm.fuhrparkmanagement.repository.CarRepository;
 import de.swtm.fuhrparkmanagement.repository.RideRepository;
+import de.swtm.fuhrparkmanagement.repository.RideReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,10 @@ public class RideService {
 
     private final RideRepository rideRepository;
 
+    private final RideReservationRepository rideReservationRepository;
+
+    private final EmailService emailService;
+
     public RideDto create(RideDto rideDto) {
         checkRideValidations(rideDto);
         Ride ride = convertToEntity(rideDto);
@@ -33,9 +39,7 @@ public class RideService {
     }
 
     public List<RideDto> listAll() {
-        List<RideDto> response = new ArrayList<>();
-        rideRepository.findAll().forEach(ride -> response.add(convertToDto(ride)));
-        return response;
+        return getNonDeletedRides().stream().map(this::convertToDto).toList();
     }
 
     public RideDto findById(long id) {
@@ -43,11 +47,21 @@ public class RideService {
     }
 
     public RideDto updateById(long id, RideDto rideDto) {
-        checkRideValidations(rideDto);
+        checkRideValidations(rideDto, id);
         checkIfRideWithIdExists(id);
         Ride ride = convertToEntity(rideDto);
         ride.setId(id);
-        return convertToDto(rideRepository.save(ride));
+        ride = rideRepository.save(ride);
+        for (RideReservation rideReservation : rideReservationRepository.findAll()) {
+            if (rideReservation.getDeletedDate() == null && rideReservation.getRide().getId() == id) {
+                try {
+                    emailService.sendUpdateReservationEmail(rideReservation);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return convertToDto(ride);
     }
 
     public void deleteById(long id) {
@@ -69,8 +83,17 @@ public class RideService {
         }
     }
 
+    private void checkRideValidations(RideDto rideDto, long id) {
+        if (rideDto.getEndDate().isBefore(rideDto.getStartDate())) {
+            throw new IllegalRideException();
+        }
+        if (isRideConflictingWithOthers(rideDto, id)) {
+            throw new IllegalRideException();
+        }
+    }
+
     private boolean isRideConflictingWithOthers(RideDto rideDto) {
-        for (Ride ride : rideRepository.findAll()) {
+        for (Ride ride : getNonDeletedRides()) {
             if (!Objects.equals(ride.getCar().getId(), rideDto.getCarId())) {
                 continue;
             }
@@ -80,6 +103,32 @@ public class RideService {
             }
         }
         return false;
+    }
+
+    private boolean isRideConflictingWithOthers(RideDto rideDto, long ignoringId) {
+        for (Ride ride : getNonDeletedRides()) {
+            if (ride.getId() == ignoringId) {
+                continue;
+            }
+            if (!Objects.equals(ride.getCar().getId(), rideDto.getCarId())) {
+                continue;
+            }
+            if (areDatesOverlapping(rideDto.getStartDate(), rideDto.getEndDate(),
+                    ride.getStartDate(), ride.getEndDate())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private List<Ride> getNonDeletedRides() {
+        List<Ride> result = new ArrayList<>();
+        for (Ride ride : rideRepository.findAll()) {
+            if (ride.getDeletedDate() == null) {
+                result.add(ride);
+            }
+        }
+        return result;
     }
 
     private boolean areDatesOverlapping(OffsetDateTime startDate1, OffsetDateTime endDate1,

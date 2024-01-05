@@ -1,3 +1,37 @@
 table {
   width: 100%;
+  border-bottom: 1px solid currentColor;
+  border-top: 1px solid currentColor;
+}
+section {
+  display: table;
+}
+
+.buttonEdit {
+  width: 3em;
+  height: 3em;
+  margin-right: 1em;
+}
+
+.buttonDelete {
+  width: 3em;
+  height: 3em;
+}
+
+.mat-column-position {
+  width: 32px;
+  border-right: 1px solid currentColor;
+  padding-right: 24px;
+  text-align: center;
+}
+
+.mat-row:nth-child(even) {
+  background-color: lightsteelblue;
+}
+
+.mat-row:nth-child(odd) {
+  background-color: white;
+}
+.mat-header {
+  background-color: cornflowerblue;
 }

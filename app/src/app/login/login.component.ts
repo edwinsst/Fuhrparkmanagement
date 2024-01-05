@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MaterialModule} from "../material/material.module";
 import {ToolBarComponent} from "../tool-bar/tool-bar.component";
 import {AuthenticationService} from "../authentication.service";
 import {Router} from "@angular/router";
+import {Title} from "@angular/platform-browser";
+import {APP_NAME} from "../app.component";
 
 @Component({
   selector: 'app-login',
@@ -21,15 +23,17 @@ export class LoginComponent {
     password: new FormControl('', [ Validators.required ])
   });
 
-  constructor(private authService: AuthenticationService, private router: Router) {}
+  constructor(private authService: AuthenticationService, private router: Router, private titleService: Title) {
+    titleService.setTitle("Login | " + APP_NAME);
+  }
 
   ngOnInit(): void {
-    this.authService.loadLongTimeTokenFromLocalStorage();
+    this.authService.loadLongTimeTokenAndUserInfo();
     if (!this.authService.longTimeToken) {
       return;
     }
     this.authService.generateShortTimeToken()
-      .subscribe(() => this.router.navigate([ '/home' ]));
+      .subscribe({ next: () => this.router.navigate([ '/home' ]) });
   }
 
   login(): void {
@@ -39,11 +43,22 @@ export class LoginComponent {
     this.authService.authenticate(username, password)
       .subscribe({
         next: () => {
-          this.authService.saveLongTimeToken();
+          this.authService.saveLongTimeTokenAndUserInfo();
           this.authService.generateShortTimeToken()
             .subscribe(() => this.router.navigate([ '/home' ]));
         },
         error: () => this.wrongCredentials = true
       });
   }
+
+  triggerLog({e}: { e: any }): void{
+    if(e.pointerType === 'mouse'){
+      console.log(e);
+      this.hidePassword = !this.hidePassword;
+    }else {
+      console.log(e);
+      this.login();
+    }
+  }
+
 }

@@ -5,7 +5,7 @@ import { AddBookingComponent } from './add-booking/add-booking.component';
 import { HomeComponent } from './home/home.component';
 import { AppRoutingModule } from "./app-routing.module";
 
-import { NgModule } from '@angular/core';
+import {forwardRef, NgModule, Provider} from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {RouterOutlet} from "@angular/router";
 
@@ -18,8 +18,15 @@ import { MaterialModule } from "./material/material.module";
 import { EditComponent } from './edit/edit.component';
 import { StatisticsComponent } from './statistics/statistics.component';
 import {LoginComponent} from "./login/login.component";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {ApiInterceptor} from "./api/api-interceptor";
 
+
+export const API_INTERCEPTOR_PROVIDER: Provider = {
+  provide: HTTP_INTERCEPTORS,
+  useExisting: forwardRef(() => ApiInterceptor),
+  multi: true
+};
 
 @NgModule({
   declarations: [
@@ -42,7 +49,10 @@ import {HttpClientModule} from "@angular/common/http";
     CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
     RouterOutlet
   ],
-  providers: [],
+  providers: [
+    ApiInterceptor,
+    API_INTERCEPTOR_PROVIDER
+  ],
   bootstrap: [AppComponent],
   exports: [],
 })

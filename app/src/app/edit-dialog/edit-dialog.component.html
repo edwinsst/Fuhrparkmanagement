@@ -1,0 +1,90 @@
+<h2 mat-dialog-title>Fahrt bearbeiten</h2>
+<mat-dialog-content>
+  <form [formGroup]="rideCreateForm">
+    <div>
+      <mat-form-field>
+        <mat-label>Zweck</mat-label>
+        <input matInput placeholder="Geschäftsreise" formControlName="purpose">
+        <mat-error *ngIf="rideCreateForm.controls.purpose.hasError('required')">Sie müssen etwas eingeben</mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-label>Buchungszeitraum</mat-label>
+        <mat-date-range-input #dateRangePicker [rangePicker]="picker">
+          <input matStartDate formControlName="startDate" placeholder="Startdatum">
+          <input matEndDate formControlName="endDate" placeholder="Enddatum" (dateChange)="updateAvailableCars()">
+        </mat-date-range-input>
+        <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Startzeit</mat-label>
+        <input matInput formControlName="startTime" type="time" (change)="updateAvailableCars()">
+        <mat-error *ngIf="rideCreateForm.controls.startTime.hasError('required')">Sie müssen etwas eingeben</mat-error>
+        <mat-error *ngIf="rideCreateForm.controls.startTime.hasError('endBeforeStart')">Sie müssen die Zeiten ändern</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Endzeit</mat-label>
+        <input matInput formControlName="endTime" type="time" (change)="updateAvailableCars()">
+        <mat-error *ngIf="rideCreateForm.controls.endTime.hasError('required')">Sie müssen etwas eingeben</mat-error>
+        <mat-error *ngIf="rideCreateForm.controls.endTime.hasError('endBeforeStart')">Sie müssen die Zeiten ändern</mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-label>Startadresse</mat-label>
+        <input matInput [formControl]="rideCreateForm.controls.startingAddress" placeholder="Feuerbach" [matAutocomplete]="autoStart">
+        <mat-autocomplete #autoStart="matAutocomplete">
+          <mat-option *ngFor="let option of (startingAddressOptions | async)" [value]="option">{{ option }}</mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="rideCreateForm.controls.startingAddress.hasError('required')">Sie müssen etwas eingeben</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Zieladresse</mat-label>
+        <input matInput [formControl]="rideCreateForm.controls.destinationAddress" placeholder="Friedrichshafen" [matAutocomplete]="autoStop">
+        <mat-autocomplete #autoStop="matAutocomplete">
+          <mat-option *ngFor="let option of (destinationAddressOptions | async)" [value]="option">{{ option }}</mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="rideCreateForm.controls.destinationAddress.hasError('required')">Sie müssen etwas eingeben</mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-selection-list #carSelection (selectionChange)="this.selectedCar = carSelection.selectedOptions.selected[0].value" [multiple]="false">
+        <mat-list-option *ngFor="let car of availableCars" [value]="car" [selected]="selectedCar == car">
+          <span matListItemTitle>{{ car.modelName }}</span>
+          <span matListItemLine>Nummernschild: {{ car.licensePlate }}</span>
+          <span matListItemLine>Sitzplätze: {{ car.seats }}</span>
+          <span matListItemLine>Kraftstoffart: {{ car.fuelType }}</span>
+          <span matListItemLine>Reichweite: {{ car.range }}km</span>
+        </mat-list-option>
+      </mat-selection-list>
+    </div>
+    <div>
+      <mat-form-field style="width: 100%;" floatLabel="always">
+        <mat-label>Passagiere / Mitfahrer</mat-label>
+        <mat-chip-grid #chipGrid aria-label="Passenger selection">
+          <mat-chip-row *ngFor="let passenger of (findCurrentPassengers() | async)" (removed)="removePassenger(passenger)">
+            {{ passenger }}
+            <button matChipRemove [attr.aria-label]="'remove ' + passenger">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+        </mat-chip-grid>
+        <input placeholder="Passagier hinzufügen..." formControlName="passengers"
+               [matChipInputFor]="chipGrid" [matAutocomplete]="autoPassenger"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               (matChipInputTokenEnd)="addPassenger($event)"/>
+        <mat-autocomplete #autoPassenger="matAutocomplete" (optionSelected)="selectedPassenger($event)">
+          <mat-option *ngFor="let passenger of (passengerOptions | async)" [value]="passenger">{{ passenger }}</mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button color="warn" mat-dialog-close>Abbrechen</button>
+  <button mat-raised-button color="warn" (click)="deleteRideWithReservation()">Löschen</button>
+  <button mat-raised-button color="primary" (click)="updateRideWithReservations()">Aktualisieren</button>
+</mat-dialog-actions>

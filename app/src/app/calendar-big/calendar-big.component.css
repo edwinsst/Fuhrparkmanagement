@@ -1,1 +1,36 @@
+.event-style {
+  text-align: center;
+  height: 10px;
+  padding: 10px;
+}
 
+.next-month-button{
+  width: 3em;
+  height: 3em;
+}
+
+.previous-month-button{
+  width: 3em;
+  height: 3em;
+  margin-left: 1em;
+  margin-right: 1em;
+  margin-top: 1em;
+}
+
+.next-month-button:hover{
+
+}
+
+.previous-month-button:hover{
+
+}
+
+.new-ride-button {
+  margin-left: 1em;
+  margin-bottom: 1em;
+}
+
+.calendar-button {
+  margin-left: 0.5em;
+  margin-bottom: 1em;
+}
