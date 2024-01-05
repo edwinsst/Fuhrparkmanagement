@@ -1,27 +1,30 @@
 import { Component } from '@angular/core';
 import {ToolBarComponent} from "../tool-bar/tool-bar.component";
-import {MatTableModule} from '@angular/material/table';
+import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+import {AfterViewInit, ViewChild} from '@angular/core';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {Title} from "@angular/platform-browser";
 import {APP_NAME} from "../app.component"
+import {NgClass} from "@angular/common";
 
 export interface PeriodicElement {
   name: string;
   position: number;
+  email: string;
   kilometer: number;
-  symbol: string;
 }
 
 const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 1, name: 'Hydrogen', kilometer: 1.0079, symbol: 'H'},
-  {position: 2, name: 'Helium', kilometer: 4.0026, symbol: 'He'},
-  {position: 3, name: 'Lithium', kilometer: 6.941, symbol: 'Li'},
-  {position: 4, name: 'Beryllium', kilometer: 9.0122, symbol: 'Be'},
-  {position: 5, name: 'Boron', kilometer: 10.811, symbol: 'B'},
-  {position: 6, name: 'Carbon', kilometer: 12.0107, symbol: 'C'},
-  {position: 7, name: 'Nitrogen', kilometer: 14.0067, symbol: 'N'},
-  {position: 8, name: 'Oxygen', kilometer: 15.9994, symbol: 'O'},
-  {position: 9, name: 'Fluorine', kilometer: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', kilometer: 20.1797, symbol: 'Ne'},
+  {position: 1, name: 'Edwin Starz', email: 'edwinstarz@doubleslash.com', kilometer: 507},
+  {position: 2, name: 'Okan Kizilagil', email: 'okankizilagil@doubleslash.com', kilometer: 457},
+  {position: 3, name: 'Cedric Schaaf', email: 'cedricschaaf@doubleslash.com', kilometer: 424},
+  {position: 4, name: 'Leonard Deininger', email: 'leonarddeininger@doubleslash.com', kilometer: 398},
+  {position: 5, name: 'Nick Habermann', email: 'nickhabermann@doubleslash.com', kilometer: 358},
+  {position: 6, name: 'Markus Rühl', email: 'markusrühl@doubleslash.com', kilometer: 316},
+  {position: 7, name: 'Urs Kalecinski', email: 'urskalecinski@doubleslash.com', kilometer: 254},
+  {position: 8, name: 'Ronnie Coleman', email: 'ronniecoleman@doubleslash.com', kilometer: 198},
+  {position: 9, name: 'Jay Cutler', email: 'jaycutler@doubleslash.com', kilometer: 167},
+  {position: 10, name: 'Chris Bumstead', email: 'chrisbumstead@doubleslash.com', kilometer: 93},
 ];
 
 @Component({
@@ -30,20 +33,26 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./statistics.component.css'],
   standalone: true,
   imports: [
-    ToolBarComponent, MatTableModule
+    ToolBarComponent, MatTableModule, MatPaginatorModule, NgClass
   ],
 
 })
 
 
-export class StatisticsComponent {
-  displayedColumns: string[] = ['position', 'name', 'kilometer', 'symbol'];
-  dataSource = ELEMENT_DATA;
+export class StatisticsComponent implements AfterViewInit {
+  displayedColumns: string[] = ['position', 'name', 'email', 'kilometer'];
+  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
     private titleService: Title
 
   ) {
     titleService.setTitle("Statistik | " + APP_NAME);
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
   }
 }
