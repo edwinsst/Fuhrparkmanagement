@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ToolBarComponent } from './tool-bar.component';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
+import {HttpClientTestingModule} from "@angular/common/http/testing";
 
 describe('ToolBarComponent', () => {
   let component: ToolBarComponent;
@@ -8,7 +10,11 @@ describe('ToolBarComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ToolBarComponent]
+      imports: [ToolBarComponent, HttpClientTestingModule, MatDialogModule],
+      providers: [
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: [] },
+      ]
     });
     fixture = TestBed.createComponent(ToolBarComponent);
     component = fixture.componentInstance;

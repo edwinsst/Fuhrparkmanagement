@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EventsComponent } from './events.component';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('EventsComponent', () => {
   let component: EventsComponent;
@@ -8,7 +9,7 @@ describe('EventsComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [EventsComponent]
+      imports: [EventsComponent, BrowserAnimationsModule]
     });
     fixture = TestBed.createComponent(EventsComponent);
     component = fixture.componentInstance;
