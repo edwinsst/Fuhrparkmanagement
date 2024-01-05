@@ -9,6 +9,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -49,6 +50,7 @@ public class EmailService {
         emailSender.send(message);
     }
 
+    @Async
     public void sendNewReservationEmail(RideReservation rideReservation) throws Exception {
         String str = """
                 Von: %s
@@ -63,6 +65,7 @@ public class EmailService {
         sendMimeMessage(recipientEmail, "Neue Resevierung", str, icsFileContent);
     }
 
+    @Async
     public void sendUpdateReservationEmail(RideReservation rideReservation) throws Exception {
         String str = """
                 Von: %s
@@ -76,6 +79,8 @@ public class EmailService {
         String recipientEmail = userService.getUserEmail(rideReservation.getUserId());
         sendMimeMessage(recipientEmail, "Resevierung geaendert", str, icsFileContent);
     }
+
+    @Async
     public void sendDeleteReservationEmail(RideReservation rideReservation) throws Exception {
         String str = """
                 Von: %s

@@ -35,6 +35,7 @@ public class ICSService {
         // ggf. /r/n instead of /n
         return String.format(str, rideReservation.getRide().getPurpose(), startDate, endDate);
     }
+
     public String generateUpdateEvent(RideReservation rideReservation) {
 
         // Convert dates from: 2023-12-27T11:11Z
@@ -65,6 +66,7 @@ public class ICSService {
         // ggf. /r/n instead of /n
         return String.format(str, rideReservation.getRide().getPurpose(), startDate, endDate);
     }
+
     public String generateDeleteEvent(RideReservation rideReservation) {
 
         // Convert dates from: 2023-12-27T11:11Z
