@@ -19,21 +19,27 @@ public class ICSService {
         endDate = endDate.replaceAll("-", "")
                 .replaceAll(":", "")
                 .replaceAll("Z", "00Z");
+        long id = rideReservation.getRide().getId();
+        String purpose = rideReservation.getRide().getPurpose();
+        String startAddress = rideReservation.getRide().getStartAddress();
+        String destinationAddress = rideReservation.getRide().getDestinationAddress();
         String str = """
                 BEGIN:VCALENDAR
                 VERSION:2.0
+                METHOD:PUBLISH
                 BEGIN:VEVENT
+                UID:slashDrive-%d
                 CLASS:PUBLIC
-                DESCRIPTION:Reservierung Fahrt: "%s"\\nDate and Time - Dec 27\\, 2023 7:00 AM to Dec 30\\, 2023 12:00 AM\\nVenue - Stuttgart\\nvon Ludwigshafen nach Stuttgart\\n
+                DESCRIPTION:Reservierung Fahrt: "%s"\\n von %s nach %s\\n
                 DTSTART:%s
                 DTEND:%s
                 LOCATION:Stuttgart
-                SUMMARY;LANGUAGE=en-us:Reservierung Fahrt: "Geschäftsreise"
+                SUMMARY;LANGUAGE=en-us:Reservierung Fahrt: %s
                 END:VEVENT
                 END:VCALENDAR
                 """;
         // ggf. /r/n instead of /n
-        return String.format(str, rideReservation.getRide().getPurpose(), startDate, endDate);
+        return String.format(str, id, purpose, startAddress, destinationAddress, startDate, endDate, purpose);
     }
 
     public String generateUpdateEvent(RideReservation rideReservation) {
@@ -50,21 +56,27 @@ public class ICSService {
                 .replaceAll(":", "")
                 .replaceAll("Z", "00Z");
         // TODO: ics has to "recognize" that it's an update and what it has to update
+        long id = rideReservation.getRide().getId();
+        String purpose = rideReservation.getRide().getPurpose();
+        String startAddress = rideReservation.getRide().getStartAddress();
+        String destinationAddress = rideReservation.getRide().getDestinationAddress();
         String str = """
                 BEGIN:VCALENDAR
                 VERSION:2.0
+                METHOD:REQUEST
                 BEGIN:VEVENT
+                UID:slashDrive-%d
                 CLASS:PUBLIC
-                DESCRIPTION:Reservierung Fahrt: "%s"\\nDate and Time - Dec 27\\, 2023 7:00 AM to Dec 30\\, 2023 12:00 AM\\nVenue - Stuttgart\\nvon Ludwigshafen nach Stuttgart\\n
+                DESCRIPTION:Bearbeiten Fahrt: "%s"\\n von %s nach %s\\n
                 DTSTART:%s
                 DTEND:%s
                 LOCATION:Stuttgart
-                SUMMARY;LANGUAGE=en-us:Reservierung Fahrt: "Geschäftsreise"
+                SUMMARY;LANGUAGE=en-us:Bearbeiten Fahrt: %s
                 END:VEVENT
                 END:VCALENDAR
                 """;
         // ggf. /r/n instead of /n
-        return String.format(str, rideReservation.getRide().getPurpose(), startDate, endDate);
+        return String.format(str, id, purpose, startAddress, destinationAddress, startDate, endDate, purpose);
     }
 
     public String generateDeleteEvent(RideReservation rideReservation) {
@@ -81,20 +93,26 @@ public class ICSService {
                 .replaceAll(":", "")
                 .replaceAll("Z", "00Z");
         // TODO: ics has to "recognize" that it's should be deleted and which one
+        long id = rideReservation.getRide().getId();
+        String purpose = rideReservation.getRide().getPurpose();
+        String startAddress = rideReservation.getRide().getStartAddress();
+        String destinationAddress = rideReservation.getRide().getDestinationAddress();
         String str = """
                 BEGIN:VCALENDAR
                 VERSION:2.0
+                METHOD:CANCEL
                 BEGIN:VEVENT
+                UID:slashDrive-%d
                 CLASS:PUBLIC
-                DESCRIPTION:Reservierung Fahrt: "%s"\\nDate and Time - Dec 27\\, 2023 7:00 AM to Dec 30\\, 2023 12:00 AM\\nVenue - Stuttgart\\nvon Ludwigshafen nach Stuttgart\\n
+                DESCRIPTION:Löschen Fahrt: "%s"\\n von %s nach %s\\n
                 DTSTART:%s
                 DTEND:%s
                 LOCATION:Stuttgart
-                SUMMARY;LANGUAGE=en-us:Reservierung Fahrt: "Geschäftsreise"
+                SUMMARY;LANGUAGE=en-us:Löschen Fahrt: %s
                 END:VEVENT
                 END:VCALENDAR
                 """;
         // ggf. /r/n instead of /n
-        return String.format(str, rideReservation.getRide().getPurpose(), startDate, endDate);
+        return String.format(str, id, purpose, startAddress, destinationAddress, startDate, endDate, purpose);
     }
 }

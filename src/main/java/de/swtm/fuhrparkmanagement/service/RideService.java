@@ -51,6 +51,7 @@ public class RideService {
         checkIfRideWithIdExists(id);
         Ride ride = convertToEntity(rideDto);
         ride.setId(id);
+        ride = rideRepository.save(ride);
         for (RideReservation rideReservation : rideReservationRepository.findAll()) {
             if (rideReservation.getDeletedDate() == null && rideReservation.getRide().getId() == id) {
                 try {
@@ -60,7 +61,7 @@ public class RideService {
                 }
             }
         }
-        return convertToDto(rideRepository.save(ride));
+        return convertToDto(ride);
     }
 
     public void deleteById(long id) {
