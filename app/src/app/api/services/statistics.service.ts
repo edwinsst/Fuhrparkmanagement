@@ -13,7 +13,7 @@ import { find_3 } from '../fn/statistics/find-3';
 import { Find_3$Params } from '../fn/statistics/find-3';
 import { listAll_3 } from '../fn/statistics/list-all-3';
 import { ListAll_3$Params } from '../fn/statistics/list-all-3';
-import { Statistic } from '../models/statistic';
+import { UserStatistic } from '../models/user-statistic';
 
 
 /**
@@ -38,7 +38,7 @@ export class StatisticsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  listAll_3$Response(params?: ListAll_3$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<Statistic>>> {
+  listAll_3$Response(params?: ListAll_3$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserStatistic>>> {
     return listAll_3(this.http, this.rootUrl, params, context);
   }
 
@@ -52,9 +52,9 @@ export class StatisticsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  listAll_3(params?: ListAll_3$Params, context?: HttpContext): Observable<Array<Statistic>> {
+  listAll_3(params?: ListAll_3$Params, context?: HttpContext): Observable<Array<UserStatistic>> {
     return this.listAll_3$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<Statistic>>): Array<Statistic> => r.body)
+      map((r: StrictHttpResponse<Array<UserStatistic>>): Array<UserStatistic> => r.body)
     );
   }
 
@@ -71,7 +71,7 @@ export class StatisticsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  find_3$Response(params: Find_3$Params, context?: HttpContext): Observable<StrictHttpResponse<Statistic>> {
+  find_3$Response(params: Find_3$Params, context?: HttpContext): Observable<StrictHttpResponse<UserStatistic>> {
     return find_3(this.http, this.rootUrl, params, context);
   }
 
@@ -85,9 +85,9 @@ export class StatisticsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  find_3(params: Find_3$Params, context?: HttpContext): Observable<Statistic> {
+  find_3(params: Find_3$Params, context?: HttpContext): Observable<UserStatistic> {
     return this.find_3$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Statistic>): Statistic => r.body)
+      map((r: StrictHttpResponse<UserStatistic>): UserStatistic => r.body)
     );
   }
 

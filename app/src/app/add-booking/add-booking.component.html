@@ -1,54 +1,7 @@
 <app-tool-bar></app-tool-bar>
 <div class="body">
-  <mat-card>
-    <mat-card-content>
-      <form [formGroup]="rideCreateForm">
-        <mat-form-field>
-          <mat-label>Zweck</mat-label>
-          <input matInput formControlName="purpose" placeholder="Geschäftsreise">
-          <mat-error *ngIf="rideCreateForm.controls.purpose.hasError('required')">Sie müssen etwas eingeben</mat-error>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Startadresse</mat-label>
-          <input matInput formControlName="startingAddress" placeholder="Feuerbach">
-          <mat-error *ngIf="rideCreateForm.controls.startingAddress.hasError('required')">Sie müssen etwas eingeben</mat-error>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Zieladresse</mat-label>
-          <input matInput formControlName="destinationAddress" placeholder="Friedrichshafen">
-          <mat-error *ngIf="rideCreateForm.controls.destinationAddress.hasError('required')">Sie müssen etwas eingeben</mat-error>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Buchungszeitraum</mat-label>
-          <mat-date-range-input #dateRangePicker [rangePicker]="picker">
-            <input matStartDate formControlName="startDate" placeholder="Startdatum">
-            <input matEndDate formControlName="endDate" placeholder="Enddatum">
-          </mat-date-range-input>
-          <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-date-range-picker #picker></mat-date-range-picker>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Startzeit</mat-label>
-          <input matInput formControlName="startTime" type="time">
-          <mat-error *ngIf="rideCreateForm.controls.startTime.hasError('required')">Sie müssen etwas eingeben</mat-error>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Endzeit</mat-label>
-          <input matInput formControlName="endTime" type="time">
-          <mat-error *ngIf="rideCreateForm.controls.endTime.hasError('required')">Sie müssen etwas eingeben</mat-error>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Auto</mat-label>
-          <mat-select formControlName="car">
-            <mat-option *ngFor="let car of this.loadedCars;" value="{{ car.id }}">{{ car.modelName }}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="rideCreateForm.controls.car.hasError('required')">Sie müssen etwas eingeben</mat-error>
-        </mat-form-field>
-        <button mat-raised-button color="primary" [disabled]="!rideCreateForm.valid" (click)="openRideCreateDialog()">Fahrt buchen</button>
-      </form>
-    </mat-card-content>
-  </mat-card>
+<div>Alle Buchungen</div>
+  <br>
   <table mat-table [dataSource]="loadedRides" class="mat-elevation-z8">
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef> Ride Id </th>

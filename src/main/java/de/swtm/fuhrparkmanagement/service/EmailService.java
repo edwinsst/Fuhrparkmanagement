@@ -61,7 +61,7 @@ public class EmailService {
                 rideReservation.getRide().getPurpose());
 
         String icsFileContent = icsService.generateNewEvent(rideReservation);
-        String recipientEmail = userService.getUserEmail(rideReservation.getUserId());
+        String recipientEmail = userService.getUser(rideReservation.getUserId()).getMail();
         sendMimeMessage(recipientEmail, "Neue Resevierung", str, icsFileContent);
     }
 
@@ -76,7 +76,7 @@ public class EmailService {
                 rideReservation.getRide().getPurpose());
 
         String icsFileContent = icsService.generateUpdateEvent(rideReservation);
-        String recipientEmail = userService.getUserEmail(rideReservation.getUserId());
+        String recipientEmail = userService.getUser(rideReservation.getUserId()).getMail();
         sendMimeMessage(recipientEmail, "Resevierung geaendert", str, icsFileContent);
     }
 
@@ -91,7 +91,7 @@ public class EmailService {
                 rideReservation.getRide().getPurpose());
 
         String icsFileContent = icsService.generateDeleteEvent(rideReservation);
-        String recipientEmail = userService.getUserEmail(rideReservation.getUserId());
+        String recipientEmail = userService.getUser(rideReservation.getUserId()).getMail();
         sendMimeMessage(recipientEmail, "Resevierung geloescht", str, icsFileContent);
     }
 }

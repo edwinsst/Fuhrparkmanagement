@@ -350,6 +350,13 @@ paths:
         - Statistics
       summary: "GET statistics/users"
       operationId: "listAll"
+      parameters:
+        - name: "currentMonth"
+          in: "query"
+          required: false
+          schema:
+            type: boolean
+            default: false
       responses:
         "200":
           description: "OK"
@@ -358,7 +365,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Statistic"
+                  $ref: "#/components/schemas/UserStatistic"
         "403":
           description: "Forbidden"
   /statistics/users/{id}:
@@ -374,13 +381,19 @@ paths:
           schema:
             type: "integer"
             format: "int64"
+        - name: "currentMonth"
+          in: "query"
+          required: false
+          schema:
+            type: boolean
+            default: false
       responses:
         "200":
           description: "OK"
           content:
             'application/json':
               schema:
-                $ref: "#/components/schemas/Statistic"
+                $ref: "#/components/schemas/UserStatistic"
         "403":
           description: "Forbidden"
         "404":
@@ -492,11 +505,15 @@ components:
       required:
         - userId
         - rideId
-    Statistic:
+    UserStatistic:
       type: object
       properties:
-        kilometers:
-          type: "string"
+        userId:
+          type: string
+        name:
+          type: string
+        amountReservations:
+          type: integer
   securitySchemes:
     bearerAuth:
       type: http

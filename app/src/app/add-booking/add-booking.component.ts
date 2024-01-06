@@ -65,7 +65,7 @@ export class AddBookingComponent {
 
   constructor(private carService: CarsService, private rideService: RidesService,
               private reservationService: ReservationsService, public dialog: MatDialog, private titleService: Title) {
-    titleService.setTitle("Neue Buchung | " + APP_NAME)
+    titleService.setTitle("Alle Buchungen | " + APP_NAME)
   }
 
   ngOnInit(): void {

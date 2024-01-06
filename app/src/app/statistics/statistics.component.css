@@ -1,14 +1,17 @@
 table {
   padding-top: 0.5em;
-  width: 100%;
+  width: auto;
   border-bottom: 1px solid currentColor;
+}
+
+.table {
+  margin-right: 1em;
+  margin-left: 1em;
 }
 
 .mat-header {
   background-color: cornflowerblue;
 }
-
-
 
 .odd {
   background-color: white;
@@ -34,5 +37,11 @@ table {
 }
 
 .third {
-  background-color: saddlebrown;
+  background-color: darkgoldenrod;
+}
+
+.displayedRange {
+  margin-top: 1em;
+  margin-left: 1em;
+  margin-bottom: 1em;
 }
