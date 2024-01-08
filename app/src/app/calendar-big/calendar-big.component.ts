@@ -45,6 +45,7 @@ export class CalendarBigComponent {
       allDay: true,
     }*/
   ];
+  clickedDate: Date | null = null;
 
   constructor(private rideService: RidesService, public dialog: MatDialog) {
   }
@@ -82,8 +83,8 @@ export class CalendarBigComponent {
     });
   }
 
-  dayClicked(date: Date) {
-    //this.dialog.open(ConfirmContentDialog);
+  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
+    this.clickedDate = date;
   }
 
   handleMoreEvent(e: any , events: any[]) {
@@ -149,6 +150,13 @@ export class CalendarBigComponent {
   getCurrentYear(): string {
     return this.viewDate.toDateString().substring(11,15);
   }
+
+  currentView():void{
+    this.viewDate = new Date();
+    this.clickedDate = this.viewDate;
+  }
+
+  protected readonly Date = Date;
 }
 
 

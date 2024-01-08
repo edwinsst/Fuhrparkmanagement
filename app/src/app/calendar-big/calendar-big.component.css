@@ -1,20 +1,33 @@
-.event-style {
-  text-align: center;
-  height: 10px;
-  padding: 10px;
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
 }
 
-.next-month-button{
-  width: 3em;
-  height: 3em;
-}
-
-.previous-month-button{
-  width: 3em;
-  height: 3em;
+.new-ride-button,.calendar-button, .next-month-button, .previous-month-button {
   margin-left: 1em;
-  margin-right: 1em;
-  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.next-month-button, .previous-month-button, .current-day-button {
+  margin-left: 1em;
+  margin-bottom: 1em;
+  width: 3em;
+  height: 3em;
+}
+
+.month-display{
+  font-family: Roboto, sans-serif;
+  font-size: large;
+  margin-left: 0.5em;
+  margin-bottom: 1em;
+  background-color: #3f51b5;
+  color: white;
+  border-radius: 0.25em;
+}
+
+.current-day-button:hover{
+
 }
 
 .next-month-button:hover{
@@ -25,16 +38,6 @@
 
 }
 
-.new-ride-button {
-  margin-left: 1em;
-  margin-bottom: 1em;
-}
-
-.calendar-button {
-  margin-left: 0.5em;
-  margin-bottom: 1em;
-}
-
-.month-display {
-  padding: 1em;
+.current-day-button{
+  margin-left: auto;
 }
