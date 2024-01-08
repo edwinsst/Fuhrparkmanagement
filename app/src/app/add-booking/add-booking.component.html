@@ -1,12 +1,15 @@
 <app-tool-bar></app-tool-bar>
 <div class="body">
-<div>Alle Buchungen</div>
+<div>Alle Fahrten</div>
+  <mat-form-field class="filterusers">
+    <mat-label>Fahrten Filter</mat-label>
+    <mat-select [formControl]="filterUsers">
+      <mat-option value="0">Alle Fahrten</mat-option>
+      <mat-option value="1">Meine Fahrten</mat-option>
+    </mat-select>
+  </mat-form-field>
   <br>
   <table mat-table [dataSource]="loadedRides" class="mat-elevation-z8">
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef> Ride Id </th>
-      <td mat-cell *matCellDef="let ride"> {{ride.id}} </td>
-    </ng-container>
 
     <ng-container matColumnDef="purpose">
       <th mat-header-cell *matHeaderCellDef> Zweck </th>
@@ -26,7 +29,7 @@
     <!-- Symbol Column -->
     <ng-container matColumnDef="startDate">
       <th mat-header-cell *matHeaderCellDef> Startdatum </th>
-      <td mat-cell *matCellDef="let ride"> {{ride.startDate}} </td>
+      <td mat-cell *matCellDef="let ride"> {{ getConvertStartDate(ride.startDate) + " Uhr" }} </td>
     </ng-container>
 
     <ng-container matColumnDef="endDate">
@@ -34,9 +37,18 @@
       <td mat-cell *matCellDef="let ride"> {{ride.endDate}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="carId">
-      <th mat-header-cell *matHeaderCellDef> Auto (Id) </th>
-      <td mat-cell *matCellDef="let ride"> {{ride.carId}} </td>
+    <ng-container matColumnDef="model_name">
+      <th mat-header-cell *matHeaderCellDef> Fahrzeug </th>
+      <td mat-cell *matCellDef="let ride"> {{ getCarModelName(ride.carId) }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="userid">
+      <th mat-header-cell *matHeaderCellDef style="width: 250px"> Mifahrer </th>
+      <td mat-cell *matCellDef="let ride">
+        <ng-container *ngFor="let user of getUser(ride.id)">
+          {{ user }}<br>
+        </ng-container>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedRideColumns"></tr>
