@@ -7,7 +7,7 @@
 <button mat-fab class="next-month-button" color="primary" (click)= nextMonthOrWeek()>
   <mat-icon>arrow_forward</mat-icon>
 </button>
-
+<span class="month-display">{{ getCurrentMonth() }} {{ getCurrentYear() }}</span>
 <div [ngSwitch]="view">
   <mwl-calendar-month-view
           *ngSwitchCase="'month'"
