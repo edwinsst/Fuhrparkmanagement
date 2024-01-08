@@ -45,10 +45,25 @@ export class CalendarBigComponent {
       allDay: true,
     }*/
   ];
+  clickedDate: Date | null = null;
 
   constructor(private rideService: RidesService, public dialog: MatDialog) {
   }
 
+  eventClicked(event: CalendarEvent) {
+    if (!event.id) {
+      return;
+    }
+    this.rideService.find_1({ id: event.id as number }).subscribe(ride => {
+      const dialogRef = this.dialog.open(EditDialogComponent);
+      dialogRef.componentInstance.ride = ride;
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.loadRides();
+        }
+      });
+    });
+  }
   ngOnInit(): void {
     this.loadRides();
   }
@@ -67,23 +82,9 @@ export class CalendarBigComponent {
     this.rideService.listAll_1().subscribe(rides => this.events = this.createEvents(rides));
   }
 
-  eventClicked(event: CalendarEvent) {
-    if (!event.id) {
-      return;
-    }
-    this.rideService.find_1({ id: event.id as number }).subscribe(ride => {
-      const dialogRef = this.dialog.open(EditDialogComponent);
-      dialogRef.componentInstance.ride = ride;
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          this.loadRides();
-        }
-      });
-    });
-  }
 
-  dayClicked(date: Date) {
-    //this.dialog.open(ConfirmContentDialog);
+  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
+    this.clickedDate = date;
   }
 
   handleMoreEvent(e: any , events: any[]) {
@@ -117,6 +118,12 @@ export class CalendarBigComponent {
     }
   }
 
+  currentView():void{
+    this.viewDate = new Date();
+    this.clickedDate = this.viewDate;
+  }
+
+  protected readonly Date = Date;
 }
 
 
