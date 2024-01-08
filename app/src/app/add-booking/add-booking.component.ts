@@ -17,6 +17,10 @@ import {Ride} from "../api/models/ride";
 import {Reservation} from "../api/models/reservation";
 import {Title} from "@angular/platform-browser";
 import {APP_NAME} from "../app.component";
+import {AuthenticationService, UserInfo} from "../authentication.service";
+import {Observable, of, startWith} from "rxjs";
+import {map} from "rxjs/operators";
+// import {getFullName} from "../dialogs/ride-create-dialog.component";
 
 const DATE_REGEX = /(?<month>[A-Z][a-z]{2}) (?<day>[0-9]{2}) (?<year>[0-9]{4})/
 const TIME_REGEX = /(?<hour>[0-9]{2}):(?<minute>[0-9]{2})/
@@ -70,6 +74,25 @@ export class AddBookingComponent {
   ngOnInit(): void {
     this.loadCars();
     this.loadRides();
+    this.loadRideReservation()
+    this.loadUsers();
+
+    this.filterUsers.valueChanges.subscribe(value => {
+      if(value == '0'){
+        this.loadRides();
+      }else if(value == '1'){
+        const userid = this.authService.userInfo?.id.toString();
+        let ridesForId: Ride[] = [];
+        this.loadedRideReservations.filter(reservation => reservation.userId === userid)
+          .forEach(reservation => {
+            const foundRide = this.loadedRides.find(ride => ride.id === reservation.rideId);
+            if(foundRide){
+              ridesForId.push(foundRide);
+            }
+          })
+        this.loadedRides = ridesForId;
+      }
+    });
   }
 
   getCarModelName(carId: number): string {
@@ -118,5 +141,25 @@ export class AddBookingComponent {
       this.passengers = [ this.getFullName(currentUserInfo) ];
     }
     this.allPassengers = userInfos.map(userInfo => this.getFullName(userInfo));
+  }
+
+  getFullName(userInfo: UserInfo): string {
+    return `${userInfo.firstName} ${userInfo.lastName}`;
+  }
+
+  // Convert dates from: 2023-12-27T11:11Z
+  getConvertEndDate(endDate: string): string {
+    const dataObj = new Date(endDate);
+    let formattedDate = dataObj.toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+    formattedDate = formattedDate.replaceAll("um", "bis");
+
+    return formattedDate;
+  }
+
+  getConvertStartDate(startDate: any): string {
+    const dataObj = new Date(startDate);
+    let formattedDate = dataObj.toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+    formattedDate = formattedDate.replaceAll("um", "von");
+    return formattedDate;
   }
 }

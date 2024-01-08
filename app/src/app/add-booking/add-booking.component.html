@@ -34,7 +34,7 @@
 
     <ng-container matColumnDef="endDate">
       <th mat-header-cell *matHeaderCellDef> Enddatum </th>
-      <td mat-cell *matCellDef="let ride"> {{ride.endDate}} </td>
+      <td mat-cell *matCellDef="let ride"> {{ getConvertEndDate(ride.endDate) + " Uhr" }} </td>
     </ng-container>
 
     <ng-container matColumnDef="model_name">
