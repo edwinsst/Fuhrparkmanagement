@@ -44,7 +44,7 @@ export class CarComponent {
   @ViewChild('dateRangePicker')
   dateRangePicker: MatDateRangeInput<any>
 
-  displayedCarColumns: string[] = ['id', 'licensePlate', 'modelName', 'fuelType', 'location', 'seats',
+  displayedCarColumns: string[] = ['licensePlate', 'modelName', 'fuelType', 'location', 'seats',
     'range', 'available', 'actions'];
   loadedCars: Car[] = [];
 
