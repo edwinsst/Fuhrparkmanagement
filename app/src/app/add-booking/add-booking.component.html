@@ -1,6 +1,5 @@
 <app-tool-bar></app-tool-bar>
 <div class="body">
-<div>Alle Fahrten</div>
   <mat-form-field class="filterusers">
     <mat-label>Fahrten Filter</mat-label>
     <mat-select [formControl]="filterUsers">
@@ -51,7 +50,7 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedRideColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedRideColumns;"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedRideColumns" class="mat-header"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedRideColumns;" class="mat-row"></tr>
   </table>
 </div>

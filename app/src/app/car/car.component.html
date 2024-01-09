@@ -48,7 +48,7 @@
       </form>
     </mat-card-content>
   </mat-card>
-  <table mat-table [dataSource]="loadedCars" class="mat-elevation-z8">
+  <table mat-table [dataSource]="loadedCars" style="margin-top: 1em" class="mat-elevation-z8">
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef> Id </th>
       <td mat-cell *matCellDef="let car"> {{car.id}} </td>
@@ -90,7 +90,7 @@
       <td mat-cell *matCellDef="let car"> {{car.available}} </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedCarColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedCarColumns;"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedCarColumns" class="mat-header"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedCarColumns;" class="mat-row"></tr>
   </table>
 </div>
