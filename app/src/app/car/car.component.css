@@ -6,6 +6,17 @@
   padding: 5em;
 }
 
+.buttonEdit {
+  width: 3em;
+  height: 3em;
+  margin-right: 1em;
+}
+
+.buttonDelete {
+  width: 3em;
+  height: 3em;
+}
+
 mat-form-field {
   margin: 5px;
   padding: 2px;

@@ -1,0 +1,59 @@
+<h2 mat-dialog-title>Auto bearbeiten</h2>
+<mat-dialog-content>
+  <form [formGroup]="editCarForm">
+    <div>
+      <mat-form-field>
+        <mat-label>Nummernschild</mat-label>
+        <input matInput formControlName="licensePlate" placeholder="Bsp. S-DS-0815">
+        <mat-error *ngIf="editCarForm.controls.licensePlate.hasError('required')">Sie müssen etwas eingeben</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Modell-Name</mat-label>
+        <input matInput formControlName="modelName" placeholder="Bsp. BMW 320i">
+        <mat-error *ngIf="editCarForm.controls.modelName.hasError('required')">Sie müssen etwas eingeben</mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-label>Treibstoff</mat-label>
+        <mat-select formControlName="fuelType">
+          <mat-option value="PETROL">Benzin</mat-option>
+          <mat-option value="DIESEL">Diesel</mat-option>
+          <mat-option value="ELECTRIC">Elektrisch</mat-option>
+        </mat-select>
+        <mat-error *ngIf="editCarForm.controls.fuelType.hasError('required')">Sie müssen etwas eingeben</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Standort</mat-label>
+        <mat-select formControlName="location">
+          <mat-option value="Friedrichshafen">Friedrichshafen</mat-option>
+          <mat-option value="Karlsruhe">Karlsruhe</mat-option>
+          <mat-option value="München">München</mat-option>
+          <mat-option value="Stuttgart">Stuttgart</mat-option>
+        </mat-select>
+        <mat-error *ngIf="editCarForm.controls.location.hasError('required')">Sie müssen etwas eingeben</mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-label>Anzahl Sitze</mat-label>
+        <input matInput formControlName="seats" type="number" placeholder="Bsp. 5">
+        <mat-error *ngIf="editCarForm.controls.seats.hasError('required')">Sie müssen etwas eingeben</mat-error>
+        <mat-error *ngIf="editCarForm.controls.seats.hasError('min')">Es muss mindestens einen Sitz geben</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Reichweite (in KM)</mat-label>
+        <input matInput formControlName="range" type="number" placeholder="Bsp. 500">
+        <mat-error *ngIf="editCarForm.controls.range.hasError('required')">Sie müssen etwas eingeben</mat-error>
+        <mat-error *ngIf="editCarForm.controls.range.hasError('min')">Die Reichweite muss mind. 1km betragen</mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-checkbox formControlName="available">Generell verfügbar</mat-checkbox>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button color="warn" mat-dialog-close>Abbrechen</button>
+  <button mat-raised-button color="primary" [disabled]="!editCarForm.valid" (click)="updateCar()">Aktualisieren</button>
+</mat-dialog-actions>
