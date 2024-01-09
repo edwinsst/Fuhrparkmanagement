@@ -8,6 +8,7 @@ import { AppRoutingModule } from "./app-routing.module";
 import {forwardRef, NgModule, Provider} from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {RouterOutlet} from "@angular/router";
+import localeDe from "@angular/common/locales/de";
 
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { CalendarComponent } from "./calendar/calendar.component";
@@ -20,6 +21,7 @@ import { StatisticsComponent } from './statistics/statistics.component';
 import {LoginComponent} from "./login/login.component";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {ApiInterceptor} from "./api/api-interceptor";
+import {registerLocaleData} from "@angular/common";
 
 
 export const API_INTERCEPTOR_PROVIDER: Provider = {
@@ -27,6 +29,8 @@ export const API_INTERCEPTOR_PROVIDER: Provider = {
   useExisting: forwardRef(() => ApiInterceptor),
   multi: true
 };
+
+registerLocaleData(localeDe);
 
 @NgModule({
   declarations: [

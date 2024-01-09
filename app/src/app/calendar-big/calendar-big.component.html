@@ -15,6 +15,7 @@
           [viewDate]="viewDate"
           [events]="events"
           [cellTemplate]="customCellTemplate"
+          [locale]="'de'"
           (eventClicked)="eventClicked($event.event)"
           (dayClicked)="dayClicked($event.day)"
   >
@@ -23,6 +24,7 @@
           *ngSwitchCase="'week'"
           [viewDate]="viewDate"
           [events]="events"
+          [locale]="'de'"
           (eventClicked)="eventClicked($event.event)"
   >
   </mwl-calendar-week-view>
