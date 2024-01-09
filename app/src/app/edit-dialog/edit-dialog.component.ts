@@ -60,7 +60,7 @@ export class EditDialogComponent {
 
   startingAddressOptions: Observable<string[]>;
   destinationAddressOptions: Observable<string[]>;
-  addressOptions = [ 'Stuttgart Feuerbach', 'Karlsruhe', 'Friedrichshafen' ];
+  addressOptions = [ 'Stuttgart', 'Karlsruhe', 'Friedrichshafen', 'München' ];
 
   passengers: UserInfo[] = [];
   allPassengers: string[] = [];
@@ -86,6 +86,10 @@ export class EditDialogComponent {
     this.loadUsers();
 
     this.setAvailableCars();
+
+    this.rideCreateForm.controls.startingAddress.valueChanges.subscribe({
+      next: value => this.updateAvailableCars()
+    })
   }
 
   fillFormFields(): void {
@@ -127,17 +131,22 @@ export class EditDialogComponent {
     return this.rideCreateForm.controls.endTime.getRawValue()!;
   }
 
+  getStartAddress(): string {
+
+    return this.rideCreateForm.controls.startingAddress.getRawValue()!;
+  }
+
   getRides(): Observable<Ride[]> {
     return !this.rides.length ? this.rideService.listAll_1() : of(this.rides);
   }
 
   setAvailableCars(): void {
     this.getRides().pipe(map(rides => {
-      let availableCars = filterAvailableCars(this.cars, rides, this.getStartDate(), this.getEndDate(),
-        this.getStartTime(), this.getEndTime(), this.passengers.length);
       const currentCar = this.cars.find(car => car.id === this.ride.carId);
-      if (currentCar && !availableCars.includes(currentCar)) {
-        availableCars = [ currentCar, ...availableCars ];
+      let availableCars = filterAvailableCars(this.cars, rides, currentCar, this.getStartDate(), this.getEndDate(),
+        this.getStartTime(), this.getEndTime(), this.passengers.length, this.getStartAddress());
+      if (currentCar && availableCars.indexOf(currentCar) > 0) {
+        availableCars = [ currentCar, ...availableCars.filter(car => car.id !== currentCar.id) ];
       }
       return availableCars;
     })).subscribe(availableCars => this.availableCars = availableCars);
@@ -206,7 +215,7 @@ export class EditDialogComponent {
       carId: this.selectedCar!.id!,
       startDate: formatDateTimeISO8601(this.getStartDate(), this.getStartTime()),
       endDate: formatDateTimeISO8601(this.getEndDate(), this.getEndTime()),
-      startAddress: this.rideCreateForm.controls.startingAddress.getRawValue()!,
+      startAddress: this.getStartAddress(),
       destinationAddress: this.rideCreateForm.controls.destinationAddress.getRawValue()!,
       purpose: this.rideCreateForm.controls.purpose.getRawValue()!
     }

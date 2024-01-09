@@ -4,9 +4,11 @@ import {getDateWithTime, parseTime} from "./date-time-utils";
 import {AbstractControl, FormControl, ValidationErrors, ValidatorFn} from "@angular/forms";
 
 export function filterAvailableCars(cars: Car[], rides: Ride[],
+                                    currentCar: Car | undefined,
                                     startDate: Date, endDate: Date,
                                     startTimeStr: string, endTimeStr: string,
-                                    passengersAmount: number): Car[]
+                                    passengersAmount: number,
+                                    startAddress: string): Car[]
 {
   const startTime = parseTime(startTimeStr);
   const endTime = parseTime(endTimeStr);
@@ -17,6 +19,12 @@ export function filterAvailableCars(cars: Car[], rides: Ride[],
   return cars.filter(car => {
     if (car.seats < passengersAmount) {
       return false;
+    }
+    if (car.location.toLowerCase() !== startAddress.toLowerCase()) {
+      return false;
+    }
+    if (car.id === currentCar?.id) {
+      return true;
     }
     for (const ride of rides) {
       if (ride.carId !== car.id) {
