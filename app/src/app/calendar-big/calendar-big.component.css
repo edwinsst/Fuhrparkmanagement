@@ -1,3 +1,9 @@
+.event-style {
+  text-align: center;
+  height: 10px;
+  padding: 10px;
+}
+
 .container {
   display: flex;
   justify-content: space-between;
