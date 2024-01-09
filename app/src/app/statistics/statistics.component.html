@@ -1,4 +1,5 @@
 <app-tool-bar></app-tool-bar>
+<div class="body">
 <mat-form-field class="displayedRange">
   <mat-label>Statistik Zeitraum</mat-label>
   <mat-select [formControl]="displayedRange">
@@ -31,13 +32,10 @@
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns" class="mat-header"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-      class="mat-row"
       [ngClass]="{
         'first' : getRowPosition(row) == 1,
         'second' : getRowPosition(row) == 2,
-        'third' : getRowPosition(row) == 3,
-        'odd' : getRowPosition(row) > 3 && getRowPosition(row) % 2 == 0,
-        'even' : getRowPosition(row) > 3 && getRowPosition(row) % 2 == 1}">
+        'third' : getRowPosition(row) == 3}">
 
   </tr>
 
@@ -45,7 +43,8 @@
 </div>
 <mat-paginator [pageSizeOptions]="[10, 25, 50]"
                showFirstLastButtons
-               aria-label="Select page of statistics">
+               aria-label="Select page of statistics"
+               style="margin-top: 1.5em">
 </mat-paginator>
-
+</div>
 
