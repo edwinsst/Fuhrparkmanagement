@@ -1,41 +1,36 @@
 services:
-  postgres:
-    image: 'postgres:latest'
-    environment:
-      - 'POSTGRES_DB=fuhrparkmanagement'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=admin'
-    ports:
-      - '5432:5432'
-  auth-service:
-    image: 'eclipse-temurin:17-jdk'
-    volumes:
-      - './auth-service/auth-service.jar:/auth-service.jar'
-    ports:
-      - '8082:8082'
-    command: ['java', '-jar', '/auth-service.jar']
-  mailhog:
-    image: mailhog/mailhog
-    ports:
-      - 1025:1025
-      - 8025:8025
+#  postgres:
+#    image: 'postgres:latest'
+#    environment:
+#      - 'POSTGRES_DB=fuhrparkmanagement'
+#      - 'POSTGRES_PASSWORD=secret'
+#      - 'POSTGRES_USER=admin'
+#    ports:
+#      - '5432:5432'
+#  auth-service:
+#    image: 'eclipse-temurin:17-jdk'
+#    volumes:
+#      - './auth-service/auth-service.jar:/auth-service.jar'
+#    ports:
+#      - '8082:8082'
+#    command: ['java', '-jar', '/auth-service.jar']
+#  mailhog:
+#    image: mailhog/mailhog
+#    ports:
+#      - 1025:1025
+#      - 8025:8025
   backend:
-    image: 'eclipse-temurin:17-jdk'
+    build: .
     ports:
       - 8080:8080
-    volumes:
-      - './gradle:/gradle'
-      - './gradlew:/gradlew'
-      - './settings.gradle:/settings.gradle'
-      - './build.gradle:/build.gradle'
-      - './swagger:/swagger'
-      - './src:/src'
-    command: /bin/bash -c './gradlew build && java -jar ./build/libs/FuhrparkmanagementSpring-0.0.1-SNAPSHOT.jar'
+
   frontend:
     build:
       context: app
-      target: builder
+      dockerfile: ./Dockerfile
     ports:
       - 4200:4200
-    volumes:
-      - "./app:/app"
+#    volumes:
+#      - "./app:/app"
+#    restart: always
+#    command: 'npm ci && npm run'

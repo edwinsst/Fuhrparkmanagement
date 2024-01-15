@@ -1,13 +1,28 @@
-FROM node:latest AS builder
+# Stage 1: Build the Angular application
+FROM node:20 as builder
 
-WORKDIR ./app
+WORKDIR /app
 
-COPY package-lock.json package.json ./
+COPY package.json .
+COPY package-lock.json .
 
-RUN npm install -g @angular/cli@16
-RUN npm ci
+RUN npm install
 
-FROM builder AS runtime
+COPY . .
 
-RUN npm build
-RUN npm start
+RUN npm run build --prod
+RUN ls -al /app/dist
+
+
+# Stage 2: Create the runtime image
+FROM nginx
+
+WORKDIR /usr/share/nginx/html
+
+# Copy the built Angular app from the builder stage
+COPY --from=builder /app/dist/app .
+
+EXPOSE 80
+
+# Command to start Nginx
+CMD ["nginx", "-g", "daemon off;"]
