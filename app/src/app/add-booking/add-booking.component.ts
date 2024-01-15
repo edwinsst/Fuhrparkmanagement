@@ -150,6 +150,7 @@ export class AddBookingComponent {
   // Convert dates from: 2023-12-27T11:11Z
   getConvertEndDate(endDate: string): string {
     const dataObj = new Date(endDate);
+    dataObj.setHours(dataObj.getHours() - 1);
     let formattedDate = dataObj.toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' });
     formattedDate = formattedDate.replaceAll("um", "bis");
 
@@ -158,6 +159,7 @@ export class AddBookingComponent {
 
   getConvertStartDate(startDate: any): string {
     const dataObj = new Date(startDate);
+    dataObj.setHours(dataObj.getHours() - 1);
     let formattedDate = dataObj.toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' });
     formattedDate = formattedDate.replaceAll("um", "von");
     return formattedDate;
