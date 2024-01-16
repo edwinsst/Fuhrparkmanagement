@@ -21,6 +21,7 @@ WORKDIR /usr/share/nginx/html
 
 # Copy the built Angular app from the builder stage
 COPY --from=builder /app/dist/app .
+COPY /nginx.conf  /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
