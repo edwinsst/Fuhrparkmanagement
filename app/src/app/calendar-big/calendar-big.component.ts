@@ -45,6 +45,7 @@ export class CalendarBigComponent {
       allDay: true,
     }*/
   ];
+  clickedDate: Date | null = null;
 
   constructor(private rideService: RidesService, public dialog: MatDialog) {
   }
@@ -82,8 +83,8 @@ export class CalendarBigComponent {
     });
   }
 
-  dayClicked(date: Date) {
-    //this.dialog.open(ConfirmContentDialog);
+  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
+    this.clickedDate = date;
   }
 
   handleMoreEvent(e: any , events: any[]) {
@@ -116,7 +117,46 @@ export class CalendarBigComponent {
       this.viewDate = subWeeks(this.viewDate, 1);
     }
   }
+  getCurrentMonth(): string {
+    switch (this.viewDate.getMonth()) {
+      case 0:
+        return "Januar";
+      case 1:
+        return "Februar";
+      case 2:
+        return "März";
+      case 3:
+        return "April";
+      case 4:
+        return "Mai";
+      case 5:
+        return "Juni";
+      case 6:
+        return "Juli";
+      case 7:
+        return "August";
+      case 8:
+        return "September";
+      case 9:
+        return "Oktober";
+      case 10:
+        return "November";
+      case 11:
+        return "Dezember";
+    }
+    return ""
+  }
 
+  getCurrentYear(): string {
+    return this.viewDate.toDateString().substring(11,15);
+  }
+
+  currentView():void{
+    this.viewDate = new Date();
+    this.clickedDate = this.viewDate;
+  }
+
+  protected readonly Date = Date;
 }
 
 

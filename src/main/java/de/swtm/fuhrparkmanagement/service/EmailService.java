@@ -1,5 +1,6 @@
 package de.swtm.fuhrparkmanagement.service;
 
+import de.swtm.fuhrparkmanagement.model.Ride;
 import de.swtm.fuhrparkmanagement.model.RideReservation;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -13,10 +14,15 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 @RequiredArgsConstructor
 @Component
 public class EmailService {
+
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.RFC_1123_DATE_TIME
+            .withLocale(Locale.GERMAN);
 
     private final JavaMailSender emailSender;
 
@@ -52,46 +58,64 @@ public class EmailService {
 
     @Async
     public void sendNewReservationEmail(RideReservation rideReservation) throws Exception {
+        Ride ride = rideReservation.getRide();
         String str = """
-                Von: %s
-                Bis: %s
-                Purpose: %s
+                Von: %s (%s)
+                Bis: %s (%s)
+                Zweck: %s
+                
+                (Diese Nachricht ist maschinell generiert, bitte nicht antworten)
                 """;
-        str = String.format(str, rideReservation.getRide().getStartDate(), rideReservation.getRide().getEndDate(),
-                rideReservation.getRide().getPurpose());
+        str = String.format(str, ride.getStartDate().format(DATE_TIME_FORMATTER),
+                ride.getStartAddress(),
+                ride.getEndDate().format(DATE_TIME_FORMATTER),
+                ride.getDestinationAddress(),
+                ride.getPurpose());
 
         String icsFileContent = icsService.generateNewEvent(rideReservation);
-        String recipientEmail = userService.getUserEmail(rideReservation.getUserId());
+        String recipientEmail = userService.getUser(rideReservation.getUserId()).getMail();
         sendMimeMessage(recipientEmail, "Neue Resevierung", str, icsFileContent);
     }
 
     @Async
     public void sendUpdateReservationEmail(RideReservation rideReservation) throws Exception {
+        Ride ride = rideReservation.getRide();
         String str = """
-                Von: %s
-                Bis: %s
-                Purpose: %s
+                Von: %s (%s)
+                Bis: %s (%s)
+                Zweck: %s
+                
+                (Diese Nachricht ist maschinell generiert, bitte nicht antworten)
                 """;
-        str = String.format(str, rideReservation.getRide().getStartDate(), rideReservation.getRide().getEndDate(),
-                rideReservation.getRide().getPurpose());
+        str = String.format(str, ride.getStartDate().format(DATE_TIME_FORMATTER),
+                ride.getStartAddress(),
+                ride.getEndDate().format(DATE_TIME_FORMATTER),
+                ride.getDestinationAddress(),
+                ride.getPurpose());
 
         String icsFileContent = icsService.generateUpdateEvent(rideReservation);
-        String recipientEmail = userService.getUserEmail(rideReservation.getUserId());
+        String recipientEmail = userService.getUser(rideReservation.getUserId()).getMail();
         sendMimeMessage(recipientEmail, "Resevierung geaendert", str, icsFileContent);
     }
 
     @Async
     public void sendDeleteReservationEmail(RideReservation rideReservation) throws Exception {
+        Ride ride = rideReservation.getRide();
         String str = """
-                Von: %s
-                Bis: %s
-                Purpose: %s
+                Von: %s (%s)
+                Bis: %s (%s)
+                Zweck: %s
+                
+                (Diese Nachricht ist maschinell generiert, bitte nicht antworten)
                 """;
-        str = String.format(str, rideReservation.getRide().getStartDate(), rideReservation.getRide().getEndDate(),
-                rideReservation.getRide().getPurpose());
+        str = String.format(str, ride.getStartDate().format(DATE_TIME_FORMATTER),
+                ride.getStartAddress(),
+                ride.getEndDate().format(DATE_TIME_FORMATTER),
+                ride.getDestinationAddress(),
+                ride.getPurpose());
 
         String icsFileContent = icsService.generateDeleteEvent(rideReservation);
-        String recipientEmail = userService.getUserEmail(rideReservation.getUserId());
+        String recipientEmail = userService.getUser(rideReservation.getUserId()).getMail();
         sendMimeMessage(recipientEmail, "Resevierung geloescht", str, icsFileContent);
     }
 }

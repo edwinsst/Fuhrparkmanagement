@@ -1,59 +1,14 @@
 <app-tool-bar></app-tool-bar>
 <div class="body">
-  <mat-card>
-    <mat-card-content>
-      <form [formGroup]="rideCreateForm">
-        <mat-form-field>
-          <mat-label>Zweck</mat-label>
-          <input matInput formControlName="purpose" placeholder="Geschäftsreise">
-          <mat-error *ngIf="rideCreateForm.controls.purpose.hasError('required')">Sie müssen etwas eingeben</mat-error>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Startadresse</mat-label>
-          <input matInput formControlName="startingAddress" placeholder="Feuerbach">
-          <mat-error *ngIf="rideCreateForm.controls.startingAddress.hasError('required')">Sie müssen etwas eingeben</mat-error>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Zieladresse</mat-label>
-          <input matInput formControlName="destinationAddress" placeholder="Friedrichshafen">
-          <mat-error *ngIf="rideCreateForm.controls.destinationAddress.hasError('required')">Sie müssen etwas eingeben</mat-error>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Buchungszeitraum</mat-label>
-          <mat-date-range-input #dateRangePicker [rangePicker]="picker">
-            <input matStartDate formControlName="startDate" placeholder="Startdatum">
-            <input matEndDate formControlName="endDate" placeholder="Enddatum">
-          </mat-date-range-input>
-          <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-date-range-picker #picker></mat-date-range-picker>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Startzeit</mat-label>
-          <input matInput formControlName="startTime" type="time">
-          <mat-error *ngIf="rideCreateForm.controls.startTime.hasError('required')">Sie müssen etwas eingeben</mat-error>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Endzeit</mat-label>
-          <input matInput formControlName="endTime" type="time">
-          <mat-error *ngIf="rideCreateForm.controls.endTime.hasError('required')">Sie müssen etwas eingeben</mat-error>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Auto</mat-label>
-          <mat-select formControlName="car">
-            <mat-option *ngFor="let car of this.loadedCars;" value="{{ car.id }}">{{ car.modelName }}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="rideCreateForm.controls.car.hasError('required')">Sie müssen etwas eingeben</mat-error>
-        </mat-form-field>
-        <button mat-raised-button color="primary" [disabled]="!rideCreateForm.valid" (click)="openRideCreateDialog()">Fahrt buchen</button>
-      </form>
-    </mat-card-content>
-  </mat-card>
+  <mat-form-field class="filterusers">
+    <mat-label>Fahrten Filter</mat-label>
+    <mat-select [formControl]="filterUsers">
+      <mat-option value="0">Alle Fahrten</mat-option>
+      <mat-option value="1">Meine Fahrten</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <br>
   <table mat-table [dataSource]="loadedRides" class="mat-elevation-z8">
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef> Ride Id </th>
-      <td mat-cell *matCellDef="let ride"> {{ride.id}} </td>
-    </ng-container>
 
     <ng-container matColumnDef="purpose">
       <th mat-header-cell *matHeaderCellDef> Zweck </th>
@@ -73,20 +28,29 @@
     <!-- Symbol Column -->
     <ng-container matColumnDef="startDate">
       <th mat-header-cell *matHeaderCellDef> Startdatum </th>
-      <td mat-cell *matCellDef="let ride"> {{ride.startDate}} </td>
+      <td mat-cell *matCellDef="let ride"> {{ getConvertStartDate(ride.startDate) + " Uhr" }} </td>
     </ng-container>
 
     <ng-container matColumnDef="endDate">
       <th mat-header-cell *matHeaderCellDef> Enddatum </th>
-      <td mat-cell *matCellDef="let ride"> {{ride.endDate}} </td>
+      <td mat-cell *matCellDef="let ride"> {{ getConvertEndDate(ride.endDate) + " Uhr" }} </td>
     </ng-container>
 
-    <ng-container matColumnDef="carId">
-      <th mat-header-cell *matHeaderCellDef> Auto (Id) </th>
-      <td mat-cell *matCellDef="let ride"> {{ride.carId}} </td>
+    <ng-container matColumnDef="model_name">
+      <th mat-header-cell *matHeaderCellDef> Fahrzeug </th>
+      <td mat-cell *matCellDef="let ride"> {{ getCarModelName(ride.carId) }} </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedRideColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedRideColumns;"></tr>
+    <ng-container matColumnDef="userid">
+      <th mat-header-cell *matHeaderCellDef style="width: 250px"> Mifahrer </th>
+      <td mat-cell *matCellDef="let ride">
+        <ng-container *ngFor="let user of getUser(ride.id)">
+          {{ user }}<br>
+        </ng-container>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedRideColumns" class="mat-header"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedRideColumns;" class="mat-row"></tr>
   </table>
 </div>

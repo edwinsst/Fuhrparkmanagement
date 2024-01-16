@@ -1,5 +1,13 @@
 <app-tool-bar></app-tool-bar>
-
+<div class="body">
+<mat-form-field class="displayedRange">
+  <mat-label>Statistik Zeitraum</mat-label>
+  <mat-select [formControl]="displayedRange">
+    <mat-option value="0">Dieser Monat</mat-option>
+    <mat-option value="1">Insgesamt</mat-option>
+  </mat-select>
+</mat-form-field>
+<div class="table">
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
   <!--- Note that these columns can be defined in any order.
@@ -7,8 +15,8 @@
 
   <!-- Position Column -->
   <ng-container matColumnDef="position">
-    <th mat-header-cell *matHeaderCellDef> No. </th>
-    <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+    <th mat-header-cell *matHeaderCellDef> Position </th>
+    <td mat-cell *matCellDef="let element"> {{getRowPosition(element)}} </td>
   </ng-container>
 
   <!-- Name Column -->
@@ -17,35 +25,21 @@
     <td mat-cell *matCellDef="let element"> {{element.name}} </td>
   </ng-container>
 
-  <!-- Weight Column -->
-  <ng-container matColumnDef="kilometer">
-    <th mat-header-cell *matHeaderCellDef> Kilometer </th>
-    <td mat-cell *matCellDef="let element"> {{element.kilometer}} </td>
-  </ng-container>
-
-  <!-- Symbol Column -->
-  <ng-container matColumnDef="email">
-    <th mat-header-cell *matHeaderCellDef> E-Mail </th>
-    <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+  <ng-container matColumnDef="fahrten">
+    <th mat-header-cell *matHeaderCellDef> Anzahl Fahrten </th>
+    <td mat-cell *matCellDef="let element"> {{element.amountReservations}} </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns" class="mat-header"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-      class="mat-row"
       [ngClass]="{
-        'first' : row.position == 1,
-        'second' : row.position == 2,
-        'third' : row.position == 3,
-        'odd' : row.position > 3 && row.position % 2 == 0,
-        'even' : row.position > 3 && row.position % 2 == 1}">
+        'first' : getRowPosition(row) == 1,
+        'second' : getRowPosition(row) == 2,
+        'third' : getRowPosition(row) == 3}">
 
   </tr>
 
 </table>
-
-<mat-paginator [pageSizeOptions]="[10, 25, 50]"
-               showFirstLastButtons
-               aria-label="Select page of periodic elements">
-</mat-paginator>
-
+</div>
+</div>
 

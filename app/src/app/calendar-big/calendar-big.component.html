@@ -1,12 +1,13 @@
-<button mat-raised-button color="primary" (click)="openRideCreateDialog()" class="new-ride-button">Fahrt anlegen</button>
-<button mat-raised-button color="primary" (click)="view = CalendarView.Month" class="calendar-button">Monat</button>
-<button mat-raised-button color="primary" (click)="view = CalendarView.Week" class="calendar-button">Woche</button>
-<button mat-fab class="previous-month-button" color="primary" (click)= previousMonthOrWeek()>
-  <mat-icon>arrow_back</mat-icon>
-</button>
-<button mat-fab class="next-month-button" color="primary" (click)= nextMonthOrWeek()>
-  <mat-icon>arrow_forward</mat-icon>
-</button>
+<div class="container">
+  <button mat-raised-button color="primary" (click)="openRideCreateDialog()" class="new-ride-button">Fahrt anlegen</button>
+  <button mat-raised-button color="primary" (click)="view = CalendarView.Month" class="calendar-button">Monat</button>
+  <button mat-raised-button color="primary" (click)="view = CalendarView.Week" class="calendar-button">Woche</button>
+  <button mat-fab class="previous-month-button" color="primary" (click)= previousMonthOrWeek()> <mat-icon>arrow_back</mat-icon> </button>
+  <button mat-fab class="next-month-button" color="primary" (click)= nextMonthOrWeek()> <mat-icon>arrow_forward</mat-icon> </button>
+  <span class="month-display">{{ getCurrentMonth() }} {{ getCurrentYear() }}</span>
+  <button mat-fab class="current-day-button" color="primary" (click)= currentView()> <mat-icon>calendar_today</mat-icon> </button>
+</div>
+
 
 <div [ngSwitch]="view">
   <mwl-calendar-month-view
@@ -14,14 +15,16 @@
           [viewDate]="viewDate"
           [events]="events"
           [cellTemplate]="customCellTemplate"
+          [locale]="'de'"
           (eventClicked)="eventClicked($event.event)"
-          (dayClicked)="dayClicked($event.day.date)"
+          (dayClicked)="dayClicked($event.day)"
   >
   </mwl-calendar-month-view>
   <mwl-calendar-week-view
           *ngSwitchCase="'week'"
           [viewDate]="viewDate"
           [events]="events"
+          [locale]="'de'"
           (eventClicked)="eventClicked($event.event)"
   >
   </mwl-calendar-week-view>

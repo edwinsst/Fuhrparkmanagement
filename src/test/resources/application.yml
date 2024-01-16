@@ -1,15 +1,13 @@
+jdbc:
+  driverClassName: 'org.h2.Driver '
+  url: 'jdbc:h2:mem:db;DB_CLOSE_DELAY=-1'
+  username: 'sa'
+  password: 'sa'
 spring:
   jpa:
     hibernate:
       ddl-auto: update
     generate-ddl: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-  datasource:
-    url: 'jdbc:postgresql://localhost:5432/fuhrparkmanagement'
-    username: 'admin'
-    password: 'secret'
   mail:
     host: '127.0.0.1'
     port: 1025

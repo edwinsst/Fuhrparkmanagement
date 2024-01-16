@@ -34,13 +34,14 @@ import {ReservationsService} from "../api/services/reservations.service";
 import {Reservation} from "../api/models/reservation";
 import {formatDateTimeISO8601, formatDateTime, parseTime} from "../date-time-utils";
 import {filterAvailableCars} from "../validation-utils";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @Component({
   selector: 'ride-create-dialog',
   templateUrl: 'ride-create-dialog.component.html',
   styleUrls: ['ride-create-dialog.component.css'],
   standalone: true,
-  imports: [MatDialogModule, MatFormFieldModule, MatButtonModule, MatStepperModule, ReactiveFormsModule, MatInputModule, NgIf, MatDatepickerModule, MatAutocompleteModule, NgForOf, AsyncPipe, MatListModule, MatGridListModule, MatChipsModule, MatIconModule, MatCardModule],
+  imports: [MatDialogModule, MatFormFieldModule, MatButtonModule, MatStepperModule, ReactiveFormsModule, MatInputModule, NgIf, MatDatepickerModule, MatAutocompleteModule, NgForOf, AsyncPipe, MatListModule, MatGridListModule, MatChipsModule, MatIconModule, MatCardModule, MatCheckboxModule],
 })
 export class RideCreateDialogComponent {
   protected readonly separatorKeysCodes = [ENTER, COMMA] as const;
@@ -63,7 +64,7 @@ export class RideCreateDialogComponent {
 
   startingAddressOptions: Observable<string[]>;
   destinationAddressOptions: Observable<string[]>;
-  addressOptions = [ 'Stuttgart Feuerbach', 'Karlsruhe', 'Friedrichshafen' ];
+  addressOptions = [ 'Stuttgart', 'Karlsruhe', 'Friedrichshafen', 'München' ];
 
   passengers: string[] = [];
   allPassengers: string[] = [];
@@ -108,9 +109,13 @@ export class RideCreateDialogComponent {
     return this.rideCreateStep1Form.controls.endTime.getRawValue()!;
   }
 
+  getStartAddress(): string {
+    return this.rideCreateStep1Form.controls.startingAddress.getRawValue()!;
+  }
+
   setAvailableCars(): void {
-    this.rideService.listAll_1().pipe(map(rides => filterAvailableCars(this.cars, rides,
-      this.getStartDate(), this.getEndDate(), this.getStartTime(), this.getEndTime(), this.passengers.length)))
+    this.rideService.listAll_1().pipe(map(rides => filterAvailableCars(this.cars, rides, undefined,
+      this.getStartDate(), this.getEndDate(), this.getStartTime(), this.getEndTime(), this.passengers.length, this.getStartAddress())))
       .subscribe(availableCars => this.availableCars = availableCars);
   }
 
@@ -126,7 +131,7 @@ export class RideCreateDialogComponent {
       carId: this.selectedCar!.id!,
       startDate: formatDateTimeISO8601(this.getStartDate(), this.getStartTime()),
       endDate: formatDateTimeISO8601(this.getEndDate(), this.getEndTime()),
-      startAddress: this.rideCreateStep1Form.controls.startingAddress.getRawValue()!,
+      startAddress: this.getStartAddress(),
       destinationAddress: this.rideCreateStep1Form.controls.destinationAddress.getRawValue()!,
       purpose: this.rideCreateStep1Form.controls.purpose.getRawValue()!
     }

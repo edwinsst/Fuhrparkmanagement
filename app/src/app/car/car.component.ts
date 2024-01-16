@@ -16,24 +16,27 @@ import {MatDateRangeInput} from "@angular/material/datepicker";
 import {Ride} from "../api/models/ride";
 import {Title} from "@angular/platform-browser";
 import {APP_NAME} from "../app.component";
+import {MatIconModule} from "@angular/material/icon";
+import {EditCarComponent} from "../edit-car/edit-car.component";
 
 @Component({
 
   selector: 'app-car',
   standalone: true,
-    imports: [
-        FormsModule,
-        MatButtonModule,
-        MatCardModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatOptionModule,
-        MatSelectModule,
-        MatTableModule,
-        NgIf,
-        ReactiveFormsModule,
-        ToolBarComponent
-    ],
+  imports: [
+    FormsModule,
+    MatButtonModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatOptionModule,
+    MatSelectModule,
+    MatTableModule,
+    NgIf,
+    ReactiveFormsModule,
+    ToolBarComponent,
+    MatIconModule
+  ],
   templateUrl: './car.component.html',
   styleUrls: ['./car.component.css']
 })
@@ -41,8 +44,8 @@ export class CarComponent {
   @ViewChild('dateRangePicker')
   dateRangePicker: MatDateRangeInput<any>
 
-  displayedCarColumns: string[] = ['id', 'licensePlate', 'modelName', 'fuelType', 'location', 'seats',
-    'range', 'available'];
+  displayedCarColumns: string[] = ['licensePlate', 'modelName', 'fuelType', 'location', 'seats',
+    'range', 'available', 'actions'];
   loadedCars: Car[] = [];
 
   displayedRideColumns: string[] = ['id', 'purpose', 'startAddress', 'destinationAddress', 'startDate', 'endDate',
@@ -100,6 +103,41 @@ export class CarComponent {
       this.createCar(car);
     });
   }
+
+  translateFuelType(car: Car): string {
+    let result = '';
+    switch (car.fuelType) {
+      case 'PETROL':
+        result = 'Benzin';
+        break;
+      case 'DIESEL':
+        result = 'Diesel';
+        break;
+      case 'ELECTRIC':
+        result = 'Elektrisch';
+        break;
+    }
+    return result;
+  }
+
+  editCarClicked(car: Car): void {
+    const dialogRef = this.dialog.open(EditCarComponent);
+    dialogRef.componentInstance.car = car;
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadCars();
+      }
+    });
+  }
+
+  deleteCarClicked(car: Car): void {
+    const dialogRef = this.dialog.open(ConfirmCarDeleteDialog);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.carService.delete({ id: car.id! }).subscribe({ next: () => this.loadCars() });
+      }
+    });
+  }
 }
 
 @Component({
@@ -109,3 +147,11 @@ export class CarComponent {
   imports: [MatDialogModule, MatButtonModule],
 })
 export class ConfirmCarCreateDialog {}
+
+@Component({
+  selector: 'confirm-car-delete-dialog',
+  templateUrl: 'confirm-car-delete-dialog.html',
+  standalone: true,
+  imports: [MatDialogModule, MatButtonModule],
+})
+export class ConfirmCarDeleteDialog {}

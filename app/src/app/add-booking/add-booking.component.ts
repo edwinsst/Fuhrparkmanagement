@@ -17,6 +17,10 @@ import {Ride} from "../api/models/ride";
 import {Reservation} from "../api/models/reservation";
 import {Title} from "@angular/platform-browser";
 import {APP_NAME} from "../app.component";
+import {AuthenticationService, UserInfo} from "../authentication.service";
+import {Observable, of, startWith} from "rxjs";
+import {map} from "rxjs/operators";
+// import {getFullName} from "../dialogs/ride-create-dialog.component";
 
 const DATE_REGEX = /(?<month>[A-Z][a-z]{2}) (?<day>[0-9]{2}) (?<year>[0-9]{4})/
 const TIME_REGEX = /(?<hour>[0-9]{2}):(?<minute>[0-9]{2})/
@@ -45,142 +49,119 @@ const TIME_REGEX = /(?<hour>[0-9]{2}):(?<minute>[0-9]{2})/
 export class AddBookingComponent {
   @ViewChild('dateRangePicker')
   dateRangePicker:  MatDateRangeInput<any>
+  filterUsers = new FormControl('0');
 
   loadedCars: Car[] = [];
+  loadedRideReservations: Reservation[] = [];
 
-  displayedRideColumns: string[] = ['id', 'purpose', 'startAddress', 'destinationAddress', 'startDate', 'endDate',
-    'carId'];
+  // ride: Ride;
+  // rides: Ride[] = [];
+
+  passengers: string[] = [];
+  allPassengers: string[] = [];
+  passengerInfos: UserInfo[] = [];
+
+  displayedRideColumns: string[] = ['purpose', 'startAddress', 'destinationAddress', 'startDate', 'endDate',
+    'model_name', 'userid'];
   loadedRides: Ride[] = [];
 
-  rideCreateForm = new FormGroup({
-    purpose: new FormControl('', [Validators.required]),
-    startingAddress: new FormControl('', [Validators.required]),
-    destinationAddress: new FormControl('', [Validators.required]),
-    startDate: new FormControl('', [Validators.required]),
-    endDate: new FormControl('', [Validators.required]),
-    startTime: new FormControl('', [Validators.required]),
-    endTime: new FormControl('', [Validators.required]),
-    car: new FormControl('', [Validators.required]),
-  });
-
   constructor(private carService: CarsService, private rideService: RidesService,
-              private reservationService: ReservationsService, public dialog: MatDialog, private titleService: Title) {
-    titleService.setTitle("Neue Buchung | " + APP_NAME)
+              private reservationService: ReservationsService, public dialog: MatDialog, private titleService: Title,
+              private authService: AuthenticationService) {
+    titleService.setTitle("Alle Fahrten | " + APP_NAME)
   }
 
   ngOnInit(): void {
     this.loadCars();
     this.loadRides();
+    this.loadRideReservation()
+    this.loadUsers();
+
+    this.filterUsers.valueChanges.subscribe(value => {
+      if(value == '0'){
+        this.loadRides();
+      }else if(value == '1'){
+        const userid = this.authService.userInfo?.id.toString();
+        let ridesForId: Ride[] = [];
+        this.loadedRideReservations.filter(reservation => reservation.userId === userid)
+          .forEach(reservation => {
+            const foundRide = this.loadedRides.find(ride => ride.id === reservation.rideId);
+            if(foundRide){
+              ridesForId.push(foundRide);
+            }
+          })
+        this.loadedRides = ridesForId;
+      }
+    });
+  }
+
+  getCarModelName(carId: number): string {
+    const car = this.loadedCars.find(car => car.id === carId);
+    return car ? car.modelName + ", " + car.licensePlate : 'N/A';
+  }
+
+  getUser(rideId: number): string[] {
+    const reservationForRide = this.loadedRideReservations.filter(reservation => reservation.rideId === rideId);
+    const userIds: string[] = [];
+    this.passengers = [];
+
+    for (const reservation of reservationForRide) {
+      userIds.push(reservation.userId);
+    }
+
+    for (const passengerInfo of this.passengerInfos) {
+      if (userIds.includes(String(passengerInfo.id)))
+        this.passengers.push(passengerInfo.firstName + " " + passengerInfo.lastName);
+    }
+    return this.passengers;
   }
 
   loadCars(): void {
     this.carService.listAll().subscribe({ next: cars => this.loadedCars = cars });
   }
 
+  loadRideReservation(): void {
+    this.reservationService.listAll_2().subscribe({ next: reservation => this.loadedRideReservations = reservation });
+  }
+
   loadRides(): void {
     this.rideService.listAll_1().subscribe({ next: rides => this.loadedRides = rides });
   }
 
-  createRide(ride: Ride): void {
-    this.rideService.create_1({ body: ride })
-      .subscribe({ next: ride => {
-        this.loadedRides = [ ...this.loadedRides, ride ];
-        if (!ride.id) {
-          return;
-        }
-        this.createReservation({
-          userId: '1', // TODO: change
-          rideId: ride.id
-        });
+  loadUsers(): void {
+    this.authService.getUsers().subscribe({ next: userInfos => {
+        this.fillPassengerArrays(userInfos);
+        this.passengerInfos = userInfos;
       }});
   }
 
-  createReservation(reservation: Reservation) {
-    this.reservationService.create_2({ body: reservation })
-      .subscribe(reservation => console.log(reservation));
-  }
-
-  getMonth(month: string): string {
-    switch (month) {
-      case "Jan":
-        return '01';
-      case "Feb":
-        return '02';
-      case "Mar":
-        return '03';
-      case "Apr":
-        return '04';
-      case "May":
-        return '05';
-      case "Jun":
-        return '06';
-      case "Jul":
-        return '07';
-      case "Aug":
-        return '08';
-      case "Sep":
-        return '09';
-      case "Oct":
-        return '10';
-      case "Nov":
-        return '11';
-      case "Dec":
-        return '12';
+  fillPassengerArrays(userInfos: UserInfo[]): void {
+    const currentUserInfo = this.authService.userInfo;
+    if (currentUserInfo) {
+      this.passengers = [ this.getFullName(currentUserInfo) ];
     }
-    return '00';
+    this.allPassengers = userInfos.map(userInfo => this.getFullName(userInfo));
   }
 
-  formatDateTime(date: string, time: string): string {
-    const dateRegexMatch = String(String(date).substring(4, 15)).match(DATE_REGEX);
-    const timeRegexMatch = String(time).match(TIME_REGEX);
-
-    if (dateRegexMatch?.groups && timeRegexMatch?.groups) {
-      const year = dateRegexMatch.groups['year'];
-      const month = this.getMonth(dateRegexMatch.groups['month']);
-      const day = dateRegexMatch.groups['day'];
-      const hour = timeRegexMatch.groups['hour'];
-      const minute = timeRegexMatch.groups['minute'];
-      return `${year}-${month}-${day}T${hour}:${minute}:00.000Z`;
-    }
-    return '';
+  getFullName(userInfo: UserInfo): string {
+    return `${userInfo.firstName} ${userInfo.lastName}`;
   }
 
-  openRideCreateDialog(): void {
-    const dialogRef = this.dialog.open(ConfirmRideCreateDialog);
+  // Convert dates from: 2023-12-27T11:11Z
+  getConvertEndDate(endDate: string): string {
+    const dataObj = new Date(endDate);
+    dataObj.setHours(dataObj.getHours() - 1);
+    let formattedDate = dataObj.toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+    formattedDate = formattedDate.replaceAll("um", "bis");
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (!result) {
-        return;
-      }
-      const purpose = this.rideCreateForm.controls.purpose.getRawValue() || '';
-      const startAddress = this.rideCreateForm.controls.startingAddress.getRawValue() || '';
-      const destinationAddress = this.rideCreateForm.controls.destinationAddress.getRawValue() || '';
-      const startDate = this.rideCreateForm.controls.startDate.getRawValue() || '';
-      const endDate = this.rideCreateForm.controls.endDate.getRawValue() || '';
-      const startTime = this.rideCreateForm.controls.startTime.getRawValue() || '';
-      const endTime = this.rideCreateForm.controls.endTime.getRawValue() || '';
-      const carId = parseInt(this.rideCreateForm.controls.car.getRawValue() || '');
+    return formattedDate;
+  }
 
-      const formattedStartDateTime = this.formatDateTime(startDate, startTime);
-      const formattedEndDateTime = this.formatDateTime(endDate, endTime);
-
-      const ride: Ride = {
-        purpose,
-        startAddress,
-        destinationAddress,
-        startDate: formattedStartDateTime,
-        endDate: formattedEndDateTime,
-        carId
-      };
-      this.createRide(ride);
-    });
+  getConvertStartDate(startDate: any): string {
+    const dataObj = new Date(startDate);
+    dataObj.setHours(dataObj.getHours() - 1);
+    let formattedDate = dataObj.toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+    formattedDate = formattedDate.replaceAll("um", "von");
+    return formattedDate;
   }
 }
-
-@Component({
-  selector: 'confirm-ride-create-dialog',
-  templateUrl: 'confirm-ride-create-dialog.html',
-  standalone: true,
-  imports: [MatDialogModule, MatButtonModule],
-})
-export class ConfirmRideCreateDialog {}

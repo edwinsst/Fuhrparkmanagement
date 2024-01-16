@@ -6,16 +6,18 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { Statistic } from '../../models/statistic';
+import { UserStatistic } from '../../models/user-statistic';
 
 export interface Find_3$Params {
   id: number;
+  currentMonth?: boolean;
 }
 
-export function find_3(http: HttpClient, rootUrl: string, params: Find_3$Params, context?: HttpContext): Observable<StrictHttpResponse<Statistic>> {
+export function find_3(http: HttpClient, rootUrl: string, params: Find_3$Params, context?: HttpContext): Observable<StrictHttpResponse<UserStatistic>> {
   const rb = new RequestBuilder(rootUrl, find_3.PATH, 'get');
   if (params) {
     rb.path('id', params.id, {});
+    rb.query('currentMonth', params.currentMonth, {});
   }
 
   return http.request(
@@ -23,7 +25,7 @@ export function find_3(http: HttpClient, rootUrl: string, params: Find_3$Params,
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Statistic>;
+      return r as StrictHttpResponse<UserStatistic>;
     })
   );
 }
