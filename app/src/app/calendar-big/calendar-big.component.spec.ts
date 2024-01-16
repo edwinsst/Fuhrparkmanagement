@@ -5,12 +5,16 @@ import {CalendarModule, DateAdapter} from "angular-calendar";
 import {adapterFactory} from "angular-calendar/date-adapters/date-fns";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {MatDialogModule} from "@angular/material/dialog";
+import localeDe from "@angular/common/locales/de";
+import {registerLocaleData} from "@angular/common";
 
 describe('CalendarBigComponent', () => {
   let component: CalendarBigComponent;
   let fixture: ComponentFixture<CalendarBigComponent>;
 
   beforeEach(() => {
+    registerLocaleData(localeDe);
+
     TestBed.configureTestingModule({
       imports: [CalendarBigComponent, HttpClientTestingModule, MatDialogModule,
         CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory})]
